@@ -1,6 +1,14 @@
 ﻿@inject TempData tempdata
 @inject NavigationManager manager
-<a @onclick="@Onclick">@ChildContent</a>
+
+@if(download){
+	<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel" download="@downloadName">@ChildContent</a>
+}
+else{
+	<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel" >@ChildContent</a>
+}
+
+
 @code {
 	[Parameter]
 	public RenderFragment? ChildContent{ get; set; }
@@ -8,13 +16,32 @@
 	public string href{ get; set; }
 	[Parameter(CaptureUnmatchedValues = true)]
 	public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+	[Parameter]
+	public string classes { get; set; } = "link-primary";
+	[Parameter]
+	public string style { get; set; } = "cursor: pointer;";
+	[Parameter]
+	public string target { get; set; } = "_self";
+	[Parameter]
+	public string rel { get; set; } = "";
+	[Parameter]
+	public bool download { get; set; } = false;
+	[Parameter]
+	public string downloadName { get; set; } = "";
+	[Parameter]
+	public EventCallback<MouseEventArgs> beforeClick { get; set; }
 
 	public async Task Onclick()
 	{
+		
+		await beforeClick.InvokeAsync();
+		
+
 		foreach (var item in AdditionalAttributes)
 		{
 			tempdata[item.Key] = item.Value;
 		}
+		if(href!=null)
 		manager.NavigateTo(href);
 	}
 }

@@ -3,13 +3,17 @@
 
 <h3>value : @value</h3>
 
-<a href="/temp2">temp2</a>
+<A href="/temp2" test="@("test")" beforeClick="@test">temp2</A>
 
 @code {
 	string value;
 	protected override async Task OnInitializedAsync()
 	{
-		tempdata["test"] = "test";
+
 		value = tempdata["test"] as string;
+	}
+
+	public async Task test(){
+		tempdata["hello"] = "hi";
 	}
 }
