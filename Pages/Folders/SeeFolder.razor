@@ -18,7 +18,7 @@ else if (response.isSuccess)
 		}
 		else
 		{
-			<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</span>
+			<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a> <A href="@($"/folders/{current.ID}/edit")" return="@($"/folders/{current.ID}/content")" folderdata=@current><Feather stroke="blue" icon="edit" height="32" width="32" /></A>)</span>
 		}
 	</h3>
 	<hr/>

@@ -5,6 +5,7 @@
 @using BookmarksFront.Components
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
+@inject TempData tempdata
 
 
 @if (response == null)
@@ -129,8 +130,13 @@ else
 			{
 				var putresponse = await BookmarkService.PutFolderTags(key.APIKey, folderID, tagsInText.ToList());
 			}
+			var ret = tempdata["return"] as string;
 
-			manager.NavigateTo($"/folders/{response.content.Container}/content");
+			if (ret != null) manager.NavigateTo(ret);
+			else{
+				manager.NavigateTo($"/folders/{response.content.Container}/content");
+
+			}
 		}
 	}
 }

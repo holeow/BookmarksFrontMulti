@@ -5,6 +5,7 @@
 @using BookmarksFront.Components
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
+@inject TempData tempdata
 
 
 @if (response == null)
@@ -105,6 +106,8 @@ else
 	{
 		await key.Check();
 
+
+
 		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
 
 		if (response.httpcode == 401)
@@ -153,7 +156,14 @@ else
 				var putresponse = await BookmarkService.PutBookmarkTags(key.APIKey, bookmarkID, tagsInText.ToList());
 			}
 
-			manager.NavigateTo($"/folders/{response.content.Folder}/content");
+			var ret = tempdata["return"] as string;
+			if(ret!=null){
+				manager.NavigateTo(ret);
+			}
+			else{
+				manager.NavigateTo($"/folders/{response.content.Folder}/content");
+			}
+			
 		}
 	}
 }
