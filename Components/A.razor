@@ -1,12 +1,22 @@
 ﻿@inject TempData tempdata
 @inject NavigationManager manager
+@inject IJSRuntime JSRuntime
+@inject UserAgent UA
 
-@if(download){
-	<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel" download="@downloadName">@ChildContent</a>
+@if(isGoogleBot){
+	<a href="@href" target="@target">@ChildContent</a>
 }
 else{
-	<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel" >@ChildContent</a>
+	@if (download)
+	{
+		<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel" download="@downloadName">@ChildContent</a>
+	}
+	else
+	{
+		<a class="@classes" style="@style" target="@target" @onclick="@Onclick" rel="@rel">@ChildContent</a>
+	}
 }
+
 
 
 @code {
@@ -30,18 +40,37 @@ else{
 	public string downloadName { get; set; } = "";
 	[Parameter]
 	public EventCallback<MouseEventArgs> beforeClick { get; set; }
+	[Parameter]
+	public bool disallowAuxClick { get; set; } = true;
 
-	public async Task Onclick()
+	bool isGoogleBot{ get; set; }
+
+	protected override async Task OnInitializedAsync()
 	{
-		
+		isGoogleBot = await UA.IsGoogleBot();
+	}
+
+	public async Task Onclick(MouseEventArgs e)
+	{
+
 		await beforeClick.InvokeAsync();
-		
+
 
 		foreach (var item in AdditionalAttributes)
 		{
 			tempdata[item.Key] = item.Value;
 		}
 		if(href!=null)
-		manager.NavigateTo(href);
+		{
+			if (e.CtrlKey && !disallowAuxClick)
+			{
+				await JSRuntime.InvokeAsync<object>("open", href, "_blank");
+			}
+			else{
+				manager.NavigateTo(href);
+			}
+			
+		}
+			
 	}
 }

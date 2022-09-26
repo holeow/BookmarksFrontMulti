@@ -15,6 +15,7 @@ builder.Services.AddScoped<ICookie, Cookie>(); //SO added from stackOverflow che
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 builder.Services.AddScoped<CheckKey, CheckKey>();
 builder.Services.AddSingleton<TempData, TempData>();
+builder.Services.AddSingleton<UserAgent, UserAgent>();
 
 
 // await builder.Build().RunAsync();

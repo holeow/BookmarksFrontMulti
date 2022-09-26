@@ -14,12 +14,18 @@
 <body>
     <div id="app">Loading...</div>
 
-<div id="blazor-error-ui">
-	An unhandled error has occurred.
-	<a href="" class="reload">Reload</a>
-	<a class="dismiss">🗙</a>
-</div>
-<script src="_framework/blazor.webassembly.js"></script>
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <!--! should put the script tag here in its own js filde -->
+    <script>
+        window.getUserAgent = () => {
+            return navigator.userAgent;
+        };
+    </script>
+    <script src="_framework/blazor.webassembly.js"></script>
 </body>
 
 </html>

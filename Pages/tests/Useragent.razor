@@ -1,0 +1,12 @@
+﻿@page "/useragent"
+@inject IJSRuntime JSRuntime
+<h3>useragent</h3>
+<p>@userAgent</p>
+@code {
+	public string userAgent{get;set;}
+
+	protected override async Task OnInitializedAsync()
+	{
+		userAgent = await JSRuntime.InvokeAsync<string>("getUserAgent");
+	}
+}
