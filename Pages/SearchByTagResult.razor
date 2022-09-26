@@ -1,0 +1,69 @@
+﻿@page "/tags/search/{tag}"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
+
+<h2>Search results for @tag</h2>
+
+<h3><Feather icon="folder" height="32" width="32"/>Folders</h3>
+<hr />
+@if (responseFolder != null && responseFolder.isSuccess)
+{
+	@foreach (var f in responseFolder.content)
+	{
+		<Folder fillColor="yellow" folder="f"/>
+	}
+}else if (responseFolder != null)
+{
+	<p>@responseFolder.message</p>
+}
+<hr />
+<h3><Feather icon="bookmark" height="32" width="32" />Bookmarks</h3>
+@if (responseBookmark != null && responseBookmark.isSuccess)
+{
+	@foreach (var b in responseBookmark.content)
+	{
+		<Bookmark bookmark="b" fillColor="green"/>
+	}
+}
+else if (responseBookmark != null)
+{
+	<p>@responseBookmark.message</p>
+	<hr />
+	@foreach (var e in responseBookmark.errors)
+	{
+		<p>@e.type</p>
+		<ul>
+			@foreach (var x in e.data)
+			{
+				<li>@x.Key : @x.Value.ToString()</li>
+			}
+		</ul>
+	}
+}
+<h3>SearchByTagResult</h3>
+
+@code {
+	[Parameter]
+	public string tag{ get; set; }
+
+	Response<List<Classes.Folder>> responseFolder;
+	Response<List<Classes.Bookmark>> responseBookmark;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+
+		responseFolder = await BookmarkService.GetFoldersWithTag(key.APIKey, tag);
+		if (responseFolder.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+			return;
+		}
+		responseBookmark = await BookmarkService.GetBookmarksWithTag(key.APIKey, tag);
+
+	}
+}

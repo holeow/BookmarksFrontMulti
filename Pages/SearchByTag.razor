@@ -1,0 +1,35 @@
+﻿@page "/tags/search"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
+
+<h3>SearchByTag</h3>
+@if (response != null)
+{
+	if (response.isSuccess)
+	{
+		@foreach (var tag in response.content)
+		{
+			<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+		}
+	}
+}
+
+@code {
+	public Response<List<string>> response;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await key.Check();
+
+		response = await BookmarkService.GetTagsOfUser(key.APIKey);
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+	}
+}

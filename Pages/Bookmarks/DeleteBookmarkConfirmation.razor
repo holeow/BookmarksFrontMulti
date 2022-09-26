@@ -1,0 +1,84 @@
+﻿@page "/bookmarks/{bookmarkID:int}/deleteconfirmation"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+
+@if (response == null)
+{
+	<p>Loading, please wait ...</p>
+}
+else if (!response.isSuccess)
+{
+	@if (response.httpcode == 999)
+	{
+		<p>@response.message</p>
+	}
+	@if (response.errors != null)
+	{
+		@foreach (var item in response.errors)
+		{
+			<p>@item.type</p>
+			<ul>
+				@foreach (var par in item.data)
+				{
+					<li>@par.Key : @par.Value.ToString()</li>
+				}
+			</ul>
+		}
+	}
+
+}
+else
+{
+	<h3>Delete bookmark : @response.content.Name (<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+	<p>Are you sure of wanting to delete this bookmark?</p>
+	<EditForm Model="@response" OnValidSubmit="@Confirm">
+		<input type="submit" value="Confirm" style="background-color : red;">
+	</EditForm>
+}
+
+<p>@errormessage</p>
+
+
+@code {
+	[Parameter]
+	public int bookmarkID { get; set; }
+
+	public string message { get; set; }
+	public Response<Classes.Bookmark> response { get; set; }
+
+	public string errormessage { get; set; }
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+
+		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+	}
+
+	public async Task Confirm(EditContext context)
+	{
+		var responseToSend = await BookmarkService.DeleteBookmark(key.APIKey, bookmarkID);
+
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		if (!response.isSuccess)
+		{
+			errormessage = response.message;
+		}
+		else
+		{
+			manager.NavigateTo($"/folders/{response.content.Folder}/content");
+		}
+	}
+}

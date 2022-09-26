@@ -1,0 +1,20 @@
+﻿@inject TempData tempdata
+@inject NavigationManager manager
+<a @onclick="@Onclick">@ChildContent</a>
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent{ get; set; }
+	[Parameter]
+	public string href{ get; set; }
+	[Parameter(CaptureUnmatchedValues = true)]
+	public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+
+	public async Task Onclick()
+	{
+		foreach (var item in AdditionalAttributes)
+		{
+			tempdata[item.Key] = item.Value;
+		}
+		manager.NavigateTo(href);
+	}
+}

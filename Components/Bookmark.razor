@@ -1,0 +1,16 @@
+﻿
+<div>
+	<Feather icon="bookmark" fill="@fillColor" /><a href="/bookmarks/@(bookmark.ID)">@bookmark.Name</a>
+	(<a href="@(bookmark.URL)" target="_blank"><Feather icon="external-link" stroke="blue" width="28" height="28"/></a>
+	<a href="/bookmarks/@(bookmark.ID)/edit"><Feather stroke="blue" icon="edit" /></a>
+	<a href="/bookmarks/@(bookmark.ID)/move"><Feather stroke="blue" icon="move" /></a>
+	<a href="/bookmarks/@(bookmark.ID)/deleteconfirmation"><Feather stroke="red" icon="x-square" /></a>)
+</div>
+
+@code {
+	[Parameter, EditorRequired]
+	public Classes.Bookmark bookmark { get; set; }
+	[Parameter]
+	public string fillColor { get; set; } = "none";
+
+}

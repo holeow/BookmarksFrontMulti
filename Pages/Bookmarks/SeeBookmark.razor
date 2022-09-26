@@ -1,0 +1,68 @@
+﻿@page "/bookmarks/{bookmarkID:int}"
+@using BookmarksFront.Classes
+@inject IBookmarkService BookmarkService
+@inject CheckKey key
+
+@if (response == null)
+{
+	<p>Loading, please wait...</p>
+}
+else if (response.isSuccess)
+{
+	<h3><Feather icon="bookmark" width="32" height="32" fill="blue" />@current.Name<span>(<a href="/folders/@(current.Folder)/content"><Feather icon="corner-up-left" width="32" height="32" stroke="blue" /></a>)</span></h3>
+	<div><a href="@current.URL"><Feather icon="link"/>@current.URL</a></div>
+	<div><p>@current.Comment</p></div>
+	<hr />
+	<h4><Feather icon="tag" width="32" height="32" />Tags</h4>
+	@if (tagsresponse!=null && tagsresponse.isSuccess)
+	{
+		@foreach (var tag in tagsresponse.content)
+		{
+			<span class="tag"><Feather icon="tag" fill="orange"/>[&ensp;@tag&ensp;]</span>
+		}
+	}
+}
+else
+{
+	<p>Error : @response.httpcode</p>
+	@if (response.httpcode == 999)
+	{
+		<p>@response.message</p>
+	}
+	@if (response.errors != null)
+	{
+		@foreach (var item in response.errors)
+		{
+			<p>@item.type</p>
+			<ul>
+				@foreach (var par in item.data)
+				{
+					<li>@par.Key : @par.Value.ToString()</li>
+				}
+			</ul>
+		}
+	}
+}
+
+
+@code {
+	public Response<Classes.Bookmark> response { get; set; }
+	public Classes.Bookmark current => response.content;
+	public Response<List<string>> tagsresponse { get; set; }
+	[Parameter]
+	public int bookmarkID{ get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		tagsresponse = await BookmarkService.GetTagsOfBookmark(key.APIKey, bookmarkID);
+
+
+	}
+}

@@ -1,0 +1,17 @@
+﻿@page "/temp3"
+@inject TempData tempdata
+
+<h3>value: @value</h3>
+
+
+<a href="/temp1">temp1</a>
+
+
+@code {
+	string value;
+	protected override async Task OnInitializedAsync()
+	{
+		value = tempdata["test"] as string;
+		tempdata["test"] = "hello";
+	}
+}

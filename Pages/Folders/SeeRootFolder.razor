@@ -1,0 +1,84 @@
+﻿@page "/user/root/content"
+@using BookmarksFront.Classes
+
+@inject CheckKey key
+@inject IBookmarkService bookmarks
+
+
+@if (response == null)
+{
+	<p>loading please wait...</p>
+}
+else if (response.isSuccess)
+{
+
+	<h3><Feather icon="folder" fill="#4040FF" height="32" width="32"/>
+		@if (current.Container == null)
+		{
+			@current.Name
+		}
+		else
+		{
+			<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</span>
+		}
+	</h3>
+	<hr/>
+	<h3><Feather icon="folder" height="32" width="32"/> Folders (<a href="/folders/@(current.ID)/folders/add"><Feather icon="folder-plus" height="32" width="32" stroke="blue"/></a>)</h3>
+	@foreach (Classes.Folder f in response.content.children)
+	{
+		<Folder fillColor="yellow" folder="f"/>
+	}
+	<hr/>
+	<h3><Feather icon="bookmark" height="32" width="32"/>Bookmarks (<a href="/folders/@(current.ID)/bookmarks/add"><Feather icon="plus-square" height="32" width="32" stroke="blue"/></a>)</h3>
+	@foreach (Classes.Bookmark b in response.content.bookmarks)
+	{
+		<Bookmark fillColor="green" bookmark="b"/>
+	}
+}
+else{
+	<p>Error : @response.httpcode</p>
+	@if (response.httpcode == 999)
+	{
+		<p>@response.message</p>
+	}
+	@if (response.errors != null)
+	{
+		@foreach (var item in response.errors)
+		{
+			<p>@item.type</p>
+			<ul>
+				@foreach (var par in item.data)
+				{
+					<li>@par.Key : @par.Value.ToString()</li>
+				}
+			</ul>
+		}
+	}
+	
+}
+
+
+
+@code {
+
+
+	Response<FolderContent> response;
+	Classes.Folder current => response.content.current;
+	protected override async Task OnInitializedAsync()
+	{
+
+		await key.Check();
+		var apikey = key.APIKey;
+
+		
+
+
+		response = await bookmarks.GetRootFolderContent(apikey);
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		
+	}
+}

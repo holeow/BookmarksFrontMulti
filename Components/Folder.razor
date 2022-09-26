@@ -1,0 +1,19 @@
+﻿
+<div>
+	<Feather icon="folder" fill="@fillColor" /><a href="/folders/@(folder.ID)/content">@folder.Name</a>
+	(<a href="/folders/@(folder.ID)/edit"><Feather stroke="blue" icon="edit"/></a> 
+	<a href="/folders/@(folder.ID)/move"><Feather icon="move" stroke="blue"/></a>
+	<a href="/folders/@(folder.ID)/deleteconfirmation"><Feather icon="x-square" stroke="red" /></a>)
+</div>
+
+
+
+@code {
+
+	[Parameter, EditorRequired]
+	public Classes.Folder folder { get; set; }
+	[Parameter]
+	public string fillColor { get; set; } = "none";
+	
+
+}

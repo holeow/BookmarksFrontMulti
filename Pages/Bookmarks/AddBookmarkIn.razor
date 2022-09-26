@@ -1,0 +1,89 @@
+﻿@page "/folders/{folderID:int}/bookmarks/add"
+@using System.ComponentModel.DataAnnotations
+@using BookmarksFront.Classes
+@inject CheckKey key
+@inject IBookmarkService bookmark
+@inject NavigationManager navmanager
+
+<h3>Add Bookmark In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+
+
+<EditForm Model="@model" OnValidSubmit="@Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div>
+		<label for="name">Name:</label>
+		<InputText id="name" @bind-Value="@model.name"/>
+	</div>
+	<div>
+		<label for="url">URL:</label>
+		<InputText id="url" @bind-Value="@model.Url" />
+	</div>
+	<div>
+		<label for="comment">Comment:</label>
+		<InputTextArea id="comment" @bind-Value="@model.Comment" />
+	</div>
+	<div>
+		<label for="imgurl">Image Url:</label>
+		<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
+	</div>
+	<input type="submit" value="Create Bookmark" />
+</EditForm>
+
+<p>@message</p>
+
+@code {
+	[Parameter]
+	public int folderID { get; set; }
+
+	public bookmarkPostModel model { get; set; } = new();
+	public string message { get; set; }
+
+	public class bookmarkPostModel
+	{
+		[Required][StringLength(255)]
+		public string name{ get; set; }
+
+		[StringLength(255)]
+		public string Comment { get; set; }
+
+		[Required][StringLength(1023)][Url]
+		public string Url { get; set; }
+
+		[StringLength(1023)][Url]
+		public string ImgUrl{ get; set; }
+	}
+
+	public async Task Submit(EditContext context)
+	{
+		var b = new Classes.Bookmark()
+		{
+			Name = model.name,
+			Comment = string.IsNullOrWhiteSpace(model.Comment) ? null : model.Comment,
+			URL = model.Url,
+			ImgUrl = string.IsNullOrWhiteSpace(model.ImgUrl) ? null : model.ImgUrl,
+			Folder = folderID
+
+		};
+
+		var result = await bookmark.PostBookmark(key.APIKey, b);
+		if (result.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		else if (result.isSuccess)
+		{
+			navmanager.NavigateTo($"/folders/{folderID}/content");
+		}
+		else
+		{
+			message = result.message;
+		}
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+		var apikey = key.APIKey;
+	}
+}

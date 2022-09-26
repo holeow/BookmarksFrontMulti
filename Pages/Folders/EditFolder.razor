@@ -1,0 +1,136 @@
+﻿@page "/folders/{folderID:int}/edit"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
+
+
+@if (response == null)
+{
+	<p>Loading, please wait ...</p>
+}
+else if (!response.isSuccess)
+{
+	@if (response.httpcode == 999)
+	{
+		<p>@response.message</p>
+	}
+	@if (response.errors != null)
+	{
+		@foreach (var item in response.errors)
+		{
+			<p>@item.type</p>
+			<ul>
+				@foreach (var par in item.data)
+				{
+					<li>@par.Key : @par.Value.ToString()</li>
+				}
+			</ul>
+		}
+	}
+
+}
+else
+{
+	<h3>Edit Folder @response.content.Name (<a href="/folders/@(response.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</h3>
+
+	<EditForm Model="@model" OnValidSubmit="@Submit">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+		
+		<div>
+			<label for="name">Name:</label>
+			<InputText id="name" @bind-Value="@model.name"/>
+		</div>
+		<div>
+			<label for="imgurl">Image Url:</label>
+			<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
+		</div>
+		<div>
+			<label for="tags">Tags (separated with ","):</label>
+		</div><div>
+			<InputTextArea id="tags" @bind-Value="@model.tags" />
+		</div>
+		<input type="submit" value="Save" />
+
+	</EditForm>
+}
+<p>@errormessage</p>
+
+
+@code {
+	[Parameter]
+	public int folderID{ get; set; }
+
+	public EditFolderModel model { get; set; } = new();
+
+	public Response<Classes.Folder> response { get; set; } 
+	public string errormessage{ get; set; }
+	public Response<List<string>> tagsresponse { get; set; }
+
+	public class EditFolderModel
+	{
+		[Required]
+		[StringLength(255, ErrorMessage = "Name is too long")]
+		public string name { get; set; }
+		[Url(ErrorMessage = " Image url Must be a valid URL")]
+		public string ImgUrl { get; set; }
+		public string tags { get; set; }
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+
+		response = await BookmarkService.GetFolder(key.APIKey, folderID);
+
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		if (response.isSuccess)
+		{
+			model.name = response.content?.Name;
+			model.ImgUrl = response.content?.ImgUrl;
+
+			tagsresponse = await BookmarkService.GetTagsOfFolder(key.APIKey, folderID);
+
+			if (tagsresponse.isSuccess)
+			{
+				if (tagsresponse.content != null)
+					model.tags = string.Join(", ", tagsresponse.content);
+			}
+		}
+	}
+
+	public async Task Submit(EditContext context)
+	{
+		response.content.ImgUrl = model.ImgUrl;
+		response.content.Name = model.name;
+
+		var responseToSend = await BookmarkService.PutFolder(key.APIKey, response.content);
+
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		if (!response.isSuccess)
+		{
+			errormessage = response.message;
+		}
+		else
+		{
+			var tagsInText = model.tags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+			var diffInputNumber = tagsInText.Count() != tagsresponse.content.Count;
+			if (diffInputNumber || (tagsInText.Any(a => !tagsresponse.content.Contains(a))))
+			{
+				var putresponse = await BookmarkService.PutFolderTags(key.APIKey, folderID, tagsInText.ToList());
+			}
+
+			manager.NavigateTo($"/folders/{response.content.Container}/content");
+		}
+	}
+}

@@ -1,0 +1,61 @@
+﻿@page "/folders/{folderID:int}/folders/add"
+@using System.ComponentModel.DataAnnotations
+@inject CheckKey key
+@inject IBookmarkService bookmark
+@inject NavigationManager navmanager
+
+<h3>Add Folder In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+
+<EditForm Model="@model" OnValidSubmit="@Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div>
+		<label for="name">Name:</label>
+		<InputText id="name" @bind-Value="@model.name"/>
+	</div>
+	<div>
+		<label for="imgurl">Image Url:</label>
+		<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
+	</div>
+	<input type="submit" value="Create Folder" />
+</EditForm>
+
+@code {
+	[Parameter]
+	public int folderID{ get; set; }
+
+	public postFolderModel model { get; set; } = new postFolderModel();
+
+	public class postFolderModel
+	{
+		[Required][StringLength(255,ErrorMessage = "Name is too long")]
+		public string name { get; set; }
+		[Url(ErrorMessage =" Image url Must be a valid URL")]
+		public string ImgUrl { get; set; }
+	}
+
+
+	public async Task Submit(EditContext context)
+	{
+		Classes.Folder folder = new Classes.Folder() {Container = folderID, Name = model.name, ImgUrl = string.IsNullOrWhiteSpace(model.ImgUrl) ? null : model.ImgUrl};
+		var result = await bookmark.PostFolder(key.APIKey, folder);
+
+		if (result.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		else
+		{
+			navmanager.NavigateTo($"/folders/{folderID}/content");
+		}
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+		var apikey = key.APIKey;
+	}
+
+
+
+}

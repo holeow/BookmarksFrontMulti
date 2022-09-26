@@ -1,0 +1,151 @@
+﻿@page "/folders/{folderID:int}/move"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+
+@if (currentFolder == null)
+{
+	<p>Loading, please wait...</p>
+}
+else if (!currentFolder.isSuccess)
+{
+	<p>@currentFolder.message</p>
+}
+else
+{
+	@if (currentFolder.content.Container == null)
+	{
+		<h3>Impossible(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</h3>
+		<p style="color: red;">Impossible to move root folder.</p>
+	}
+	else
+	{
+		<h3>Move folder : @currentFolder.content.Name (<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+		@if (currentContainer == null)
+		{
+			<p>Loading, please wait...</p>
+		}
+		else
+		{
+
+			@if (currentContainer.content.current.Container == null)
+			{
+				<h3>
+					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+					@(currentContainer.content.current.Name) (<a @onclick="() => Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>)
+				</h3>
+			}
+			else
+			{
+				<h3>
+					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+					@currentContainer.content.current.Name
+					(
+					<a @onclick="()=> Navigate(currentContainer.content.current.Container.Value)"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>
+					<a @onclick="()=> Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>
+					)
+				</h3>
+			}
+
+			@foreach (var item in currentContainer.content.children)
+			{
+				@if (item.ID == currentFolder.content.ID)
+				{
+					<div>
+						<Feather icon="folder" fill="red" /><a>@item.Name</a>
+						(<a><Feather stroke="red" icon="arrow-down-circle" /></a>)
+					</div>
+				}
+				else
+				{
+					<div>
+						<Feather icon="folder" fill="yellow" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+						(<a @onclick="() => Place(item.ID)"><Feather stroke="blue" icon="arrow-down-circle" /></a>)
+					</div>
+				}
+
+			}
+		}
+	}
+
+	
+
+}
+
+<p>@errormessage</p>
+@code {
+	[Parameter]
+	public int folderID { get; set; }
+
+	public Response<Classes.Folder> currentFolder { get; set; }
+	public Response<FolderContent> currentContainer { get; set; }
+	public string errormessage { get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+
+		currentFolder = await BookmarkService.GetFolder(key.APIKey, folderID);
+
+		if (currentFolder.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		if (!currentFolder.isSuccess)
+		{
+			errormessage = currentFolder.message;
+		}
+		if (currentFolder.isSuccess)
+		{
+			if (currentFolder.content.Container == null) currentContainer = new();
+			else currentContainer = await BookmarkService.GetFolderContent(key.APIKey, currentFolder.content.Container.Value);
+			if (currentContainer.httpcode == 401)
+			{
+				await key.ResetKeyAndRedirect();
+			}
+
+			if (!currentContainer.isSuccess)
+			{
+				errormessage = currentContainer.message;
+			}
+		}
+
+
+	}
+
+	public async Task Place(int id)
+	{
+		currentFolder.content.Container = id;
+		var res = await BookmarkService.PutFolder(key.APIKey, currentFolder.content);
+		if (res.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		if (!res.isSuccess)
+		{
+			errormessage = res.message;
+		}
+		else
+		{
+			manager.NavigateTo($"/folders/{id}/content");
+		}
+	}
+
+	public async Task Navigate(int id)
+	{
+		currentContainer = await BookmarkService.GetFolderContent(key.APIKey, id);
+		if (currentContainer.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		if (!currentContainer.isSuccess)
+		{
+			errormessage = currentContainer.message;
+		}
+	}
+
+}

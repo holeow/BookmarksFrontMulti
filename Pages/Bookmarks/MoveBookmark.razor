@@ -1,0 +1,129 @@
+﻿@page "/bookmarks/{bookmarkID:int}/move"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+
+@if (currentbookmark == null)
+{
+	<p>Loading, please wait...</p>
+}
+else if (!currentbookmark.isSuccess)
+{
+	<p>@currentbookmark.message</p>
+}
+else
+{
+	<h3>Move bookmark : @currentbookmark.content.Name (<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+	@if (currentFolder == null)
+	{
+		<p>Loading, please wait...</p>
+	}
+	else
+	{
+		
+		@if (currentFolder.content.current.Container == null)
+		{
+			<h3>
+				<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+				@(currentFolder.content.current.Name) (<a @onclick="() => Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32"/></a>)
+			</h3>
+		}
+		else
+		{
+			<h3>
+				<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+				@currentFolder.content.current.Name
+				(
+				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>
+				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>
+				)
+			</h3>
+		}
+
+		@foreach (var item in currentFolder.content.children)
+		{
+			<div>
+				<Feather icon="folder" fill="yellow"/><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+				(<a @onclick="() => Place(item.ID)"><Feather stroke="blue" icon="arrow-down-circle"/></a>)
+			</div>
+		}
+	}
+
+}
+
+<p>@errormessage</p>
+@code {
+	[Parameter]
+	public int bookmarkID{ get; set; }
+
+	public Response<Classes.Bookmark> currentbookmark {get; set; }
+	public Response<FolderContent> currentFolder{ get; set; }
+	public string errormessage{ get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await key.Check();
+
+		currentbookmark = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+
+		if (currentbookmark.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+		if (!currentbookmark.isSuccess)
+		{
+			errormessage = currentbookmark.message;
+		}
+		if (currentbookmark.isSuccess)
+		{
+			currentFolder = await BookmarkService.GetFolderContent(key.APIKey, currentbookmark.content.Folder);
+			if (currentFolder.httpcode == 401)
+			{
+				await key.ResetKeyAndRedirect();
+			}
+
+			if (!currentFolder.isSuccess)
+			{
+				errormessage = currentFolder.message;
+			}
+		}
+		
+
+	}
+
+	public async Task Place(int id)
+	{
+		currentbookmark.content.Folder = id;
+		var res = await BookmarkService.PutBookmark(key.APIKey, currentbookmark.content);
+		if (res.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		if (!res.isSuccess)
+		{
+			errormessage = res.message;
+		}
+		else
+		{
+			manager.NavigateTo($"/folders/{id}/content");
+		}
+	}
+
+	public async Task Navigate(int id)
+	{
+		currentFolder = await BookmarkService.GetFolderContent(key.APIKey, id);
+		if (currentFolder.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+		if (!currentFolder.isSuccess)
+		{
+			errormessage = currentFolder.message;
+		}
+	}
+
+}

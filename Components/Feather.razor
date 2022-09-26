@@ -1,0 +1,35 @@
+﻿
+
+<svg
+	width="@width"
+	height="@height"
+	fill="@fill"
+	stroke="@stroke"
+	stroke-width="@strokeWidth"
+	stroke-linecap="@strokeLinecap"
+	stroke-linejoin="@strokeLinejoin"
+	>
+	<use href="/svg/feather-sprite.svg#@(icon)"/>
+</svg>
+
+@code {
+	[Parameter, EditorRequired]
+	public string icon { get; set; }
+	[Parameter]
+	public string fill { get; set; } = "none";
+	[Parameter]
+	public string stroke { get; set; } = "currentColor";
+	[Parameter]
+	public int height { get; set; } = 24;
+	[Parameter]
+	public int width { get; set; } = 24;
+	[Parameter]
+	public float strokeWidth { get; set; } = 2;
+	[Parameter]
+	public string strokeLinecap { get; set; } = "round";
+	[Parameter]
+	public string strokeLinejoin { get; set; } = "round";
+
+
+
+}

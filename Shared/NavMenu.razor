@@ -1,0 +1,49 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">BookmarksFront</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+	    <div class="nav-item px-3">
+		    <NavLink class="nav-link" href="/setkey">
+			    <Feather icon="key" stroke="white" /> Set API Key
+		    </NavLink>
+	    </div>
+	    <div class="nav-item px-3">
+		    <NavLink class="nav-link" href="/user/root/content">
+			    <Feather icon="folder" stroke="white" fill="white" /> Root folder
+		    </NavLink>
+	    </div>
+	    <div class="nav-item px-3">
+		    <NavLink class="nav-link" href="/tags/search">
+			    <Feather icon="tag" stroke="white" fill="white" /> Search by tags
+		    </NavLink>
+	    </div>
+	    <div class="nav-item px-3">
+		    <NavLink class="nav-link" href="/temp1">
+			    <Feather icon="clock" stroke="white" fill="none" /> test tempdata
+		    </NavLink>
+	    </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

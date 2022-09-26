@@ -1,0 +1,54 @@
+﻿@page "/setkey"
+@using BookmarksFront.Classes
+@inject HttpClient Http
+@inject ICookie cookie
+
+
+
+<h2>SetKey</h2>
+
+<h3>How to get a key ?</h3>
+<p>
+	Go to <a href="https://apibookmarks.hlw.ninja/auth/signup" target="_blank" rel="noopener noreferrer"><Feather icon="link" />The api website</a> and register. <br />
+	Go to your user panel and generate a new Key, copy it, and paste it here. 
+	<ul>
+		<li>You can only have one key at a time.</li>
+		<li>Generating a new key will invalidate the first one.</li>
+		<li>Save your key somewhere safe, we will give you each key only once then hide it.</li>
+		<li>Don't share your key to anyone else. Someone with your key can access and modify all your data!</li>
+	</ul></p>
+<EditForm Model="@model" OnValidSubmit="@Submit">
+	<label for="key">key</label>
+	<InputText @bind-Value="model.key" id="key"></InputText>
+	<input type="submit" class="btn btn-primary" value="Save" />
+</EditForm>
+<p>@message</p>
+
+
+
+@code {
+
+	public APIKeyModel model = new APIKeyModel();
+	string message = "";
+	public class APIKeyModel
+	{
+		public string key{ get; set; }
+	}
+
+	int value = 0;
+
+	protected override async Task OnInitializedAsync()
+	{
+		model.key = await APIKey.GetKey(cookie);
+	}
+
+	public async Task Submit(EditContext context)
+	{
+		await APIKey.SetKey(cookie,model.key);
+		message = $"API Key set to {model.key}";
+
+	}
+
+	
+	
+}
