@@ -5,24 +5,38 @@
 @using BookmarksFront.Components
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
+@inject UserAgent UA
 
-<h3>SearchByTag</h3>
-@if (response != null)
+@if (isGoogle)
 {
-	if (response.isSuccess)
+	<BookmarksFront.Pages.Google.GoogleSearchByTags/>
+}
+else
+{
+	<h3>SearchByTag</h3>
+	@if (response != null)
 	{
-		@foreach (var tag in response.content)
+		if (response.isSuccess)
 		{
-			<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+			@foreach (var tag in response.content)
+			{
+				<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+			}
 		}
 	}
 }
 
+
 @code {
 	public Response<List<string>> response;
-
+	public bool isGoogle{ get; set; }
 	protected override async Task OnInitializedAsync()
 	{
+		if (await UA.IsGoogleBot())
+		{
+			isGoogle = true;return;
+		}
+
 		await key.Check();
 
 		response = await BookmarkService.GetTagsOfUser(key.APIKey);
