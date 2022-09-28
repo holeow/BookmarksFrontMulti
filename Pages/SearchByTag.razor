@@ -15,7 +15,8 @@
 		{
 			@foreach (var tag in response.content)
 			{
-				<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+				<Tag fill="orange" tag="@tag"/>
+				//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
 			}
 		}
 	}

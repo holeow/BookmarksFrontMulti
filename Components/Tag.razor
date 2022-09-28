@@ -1,0 +1,14 @@
+﻿
+<span><a @onclick=@OnClick><Feather icon="tag" fill="@fill" width="16" height="16" /> @tag</a></span>
+
+@code {
+
+	[Parameter]
+	public string fill { get; set; }
+	[Parameter]
+	public string tag { get; set; }
+	[Parameter]
+	public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+
+}
