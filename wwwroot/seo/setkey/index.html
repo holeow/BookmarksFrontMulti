@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Set API key</title><!--# TITLE-->
+    <!--# Description-->
+    <meta name="description" content="Bookmarks hlw ninja uses a public API to handle your bookmarks. Grab your API key and set it here to access all its functionalities." />
+    <base href="/" />
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/app.css" rel="stylesheet" />
+    <link href="/BookmarksFront.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!--# content-->
+    <div class="page">
+        <div class="sidebar">
+            <!--# Nav Menu-->
+            <div class="top-row ps-3 navbar navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="">BookmarksFront</a>
+                    <button title="Navigation menu" class="navbar-toggler">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse" @onclick="ToggleNavMenu">
+                <nav class="flex-column">
+                    <div class="nav-item px-3">
+                        <a href="/">
+                            Home
+                        </a>
+                    </div>
+                    <div class="nav-item px-3">
+                        <a href="/setkey">
+                            Set API Key
+                        </a>
+                    </div>
+                    <div class="nav-item px-3">
+                        <a href="/user/root/content">
+                             Root folder
+                        </a>
+                    </div>
+                    <div class="nav-item px-3">
+                        <a href="/search">
+                            Search by tags
+                        </a>
+                    </div>
+                </nav>
+            </div>
+            <!--# end of nav menu-->
+        </div>
+
+        <main>
+            <div class="top-row px-4">
+                <!--<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>-->
+            </div>
+
+            <article class="content px-4">
+                <!--# Body-->
+                <h3>Set you API key here !</h3>
+                <p>
+                    Go to <a href="https://apibookmarks.hlw.ninja"> our <em>API</em></a> and <em>register</em> to get an API Key for free ! <br />
+                    Then use it here to access all of our content and start handling your <em>bookmarks</em> !
+                </p>
+
+                <!--# end of body-->
+            </article>
+        </main>
+    </div>
+
+</body>
+
+</html>

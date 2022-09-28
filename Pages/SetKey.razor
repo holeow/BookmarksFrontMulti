@@ -5,12 +5,6 @@
 @inject UserAgent UA
 
 
-@if (isGoogle)
-{
-	<BookmarksFront.Pages.Google.GoogleSetKey/>
-}
-else
-{
 
 
 	<h2>SetKey</h2>
@@ -32,7 +26,7 @@ else
 	</EditForm>
 	<p>@message</p>
 
-}
+
 
 @code {
 
@@ -42,16 +36,12 @@ else
 	{
 		public string key{ get; set; }
 	}
-	bool isGoogle = false;
+	
 	int value = 0;
 
 	protected override async Task OnInitializedAsync()
 	{
-		if (await UA.IsGoogleBot())
-		{
-			isGoogle = true;
-			return;
-		}
+	
 
 		model.key = await APIKey.GetKey(cookie);
 	}

@@ -1,4 +1,4 @@
-﻿@page "/tags/search"
+﻿@page "/search"
 @inject CheckKey key
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
@@ -7,12 +7,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject UserAgent UA
 
-@if (isGoogle)
-{
-	<BookmarksFront.Pages.Google.GoogleSearchByTags/>
-}
-else
-{
+
 	<h3>SearchByTag</h3>
 	@if (response != null)
 	{
@@ -24,18 +19,15 @@ else
 			}
 		}
 	}
-}
+
 
 
 @code {
 	public Response<List<string>> response;
-	public bool isGoogle{ get; set; }
+	
 	protected override async Task OnInitializedAsync()
 	{
-		if (await UA.IsGoogleBot())
-		{
-			isGoogle = true;return;
-		}
+		
 
 		await key.Check();
 

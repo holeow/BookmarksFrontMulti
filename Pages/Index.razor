@@ -1,35 +1,17 @@
 ﻿@page "/"
 @inject UserAgent UA
 
-@if (isGoogle)
-{
+
 	<PageTitle>Home</PageTitle>
-	
-	<h1>Welcome ! This is bookmarks.hlw.ninja</h1>
+
+		<h1>Welcome ! This is bookmarks.hlw.ninja</h1>
 	<p>This is a front end application consuming the apibookmarks and letting you handle bookmarks, folders of bookmarks and tag them!</p>
 	<p>Soon : a chrome add-on to access your bookmarks easily!</p>
 	<a href="/folders/root/content">Access your root folder.</a>
-}
-else
-{
-	<PageTitle>Bookmarks Front</PageTitle>
 
-	<h1>Welcome to your bookmark manager</h1>
 
-	
-
-	                
-}
 
 
 @code{
-	public bool isGoogle { get; set; }
-	protected override async Task OnInitializedAsync()
-	{
-		if (await UA.IsGoogleBot())
-		{
-			isGoogle = true; return;
-		}
-	}
 
 }

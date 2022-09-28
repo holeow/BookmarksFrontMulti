@@ -6,12 +6,7 @@
 @inject UserAgent UA
 
 
-@if (isGoogle)
-{
-	<BookmarksFront.Pages.Google.GoogleRootFolder/>
-}
-else
-{
+
 	@if (response == null)
 	{
 		<p>loading please wait...</p>
@@ -65,7 +60,7 @@ else
 		}
 
 	}
-}
+
 
 
 
@@ -75,15 +70,10 @@ else
 
 	Response<FolderContent> response;
 	Classes.Folder current => response.content.current;
-	public bool isGoogle{ get; set; }
-
+	
 	protected override async Task OnInitializedAsync()
 	{
-		if (await UA.IsGoogleBot())
-		{
-			isGoogle = true;
-			return;
-		}
+		
 		await key.Check();
 		var apikey = key.APIKey;
 
