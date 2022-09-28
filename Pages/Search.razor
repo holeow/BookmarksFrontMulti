@@ -1,0 +1,89 @@
+﻿@page "/search"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
+
+
+@if (response == null)
+{
+	<p>Loading, please wait...</p>
+}
+else if (!response.isSuccess)
+{
+	<p>Error : @response.httpcode</p>
+	@if (response.httpcode == 999)
+	{
+		<p>@response.message</p>
+	}
+	@if (response.errors != null)
+	{
+		@foreach (var item in response.errors)
+		{
+			<p>@item.type</p>
+			<ul>
+				@foreach (var par in item.data)
+				{
+					<li>@par.Key : @par.Value.ToString()</li>
+				}
+			</ul>
+		}
+	}
+}
+else
+{
+	<h3><Feather icon="folder" height="32" width="32" />Folders</h3>
+	@foreach (Classes.Folder f in response.content.folders)
+	{
+		<Folder fillColor="yellow" folder="f" />
+	}
+	<hr />
+	<h3><Feather icon="bookmark" height="32" width="32" />Bookmarks</h3>
+	@foreach (Classes.Bookmark b in response.content.bookmarks)
+	{
+		<Bookmark fillColor="green" bookmark="b" />
+	}
+}
+
+
+
+
+@code {
+
+	public Response<SearchResult> response { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await key.Check();
+
+		var uri = manager.ToAbsoluteUri(manager.Uri);
+		string tags = null;
+		string name = null;
+		var query = QueryHelpers.ParseQuery(uri.Query);
+		if (query != null)
+		{
+			if(query.TryGetValue("name",out var n))
+			{
+				name = n;
+			}
+			if (query.TryGetValue("tags", out var t))
+			{
+				tags = t;
+			}
+		}
+		string str = "";
+		if (tags != null) str += "tags=" + tags;
+		if (tags != null && name != null) str += "&";
+		if (name != null) str += "name=" + name;
+
+		response = await BookmarkService.Search(key.APIKey, str);
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+	}
+
+}

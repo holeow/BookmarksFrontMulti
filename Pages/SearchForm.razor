@@ -1,0 +1,100 @@
+﻿@page "/searchform"
+@inject CheckKey key
+@inject IBookmarkService BookmarkService
+@inject NavigationManager manager
+@using BookmarksFront.Components
+@using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
+@inject UserAgent UA
+
+
+<h3>Search</h3>
+
+<EditForm Model="model" OnValidSubmit="@OnSubmit">
+	
+	<InputText @bind-Value="model.searchString"></InputText>
+	@if (UsedTags != null)
+{
+	@foreach (var tag in UsedTags)
+	{
+		<Tag fill="orange" tag="@tag" OnClick="() => Remove(tag)" />
+		//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+	}
+}
+
+<input type="submit" value="Search"/>
+</EditForm>
+<h3>Tags available</h3>
+@if (AvailableTags != null)
+	{
+		
+			@foreach (var tag in AvailableTags.OrderBy(a=> a))
+			{
+				
+				<Tag fill="orange" tag="@tag" OnClick="() => Add(tag)"/>
+				//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+			}
+	}
+
+
+
+@code {
+	public Response<List<string>> response;
+
+	public List<string> AvailableTags;
+	public List<string> UsedTags = new List<string>();
+
+	public SearchModel model { get; set; } = new SearchModel();
+
+
+	public class SearchModel
+	{
+		public string searchString{ get; set; }
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		
+
+		await key.Check();
+
+		response = await BookmarkService.GetTagsOfUser(key.APIKey);
+		AvailableTags = response?.content;
+		if (response.httpcode == 401)
+		{
+			await key.ResetKeyAndRedirect();
+		}
+
+	}
+
+	public async Task Add(string tag)
+	{
+		AvailableTags.Remove(tag);
+		UsedTags.Add(tag);
+	}
+
+	public async Task Remove(string tag)
+	{
+		UsedTags.Remove(tag);
+		AvailableTags.Add(tag);
+	}
+
+	public async Task OnSubmit()
+	{
+		var str = "/search?";
+		if (!string.IsNullOrWhiteSpace(model.searchString))
+		{
+			str += $"name={model.searchString}";
+			if (UsedTags.Count > 0)
+			{
+				str += "&";
+			}
+		}
+		if (UsedTags.Count > 0)
+		{
+			str += $"tags={string.Join(',', UsedTags)}";
+		}
+
+		manager.NavigateTo(str);
+	}
+}

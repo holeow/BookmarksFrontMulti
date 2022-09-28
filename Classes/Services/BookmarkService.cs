@@ -57,6 +57,9 @@ namespace BookmarksFront.Classes.Services
         public Task<Response<List<Folder>>> GetFoldersWithTag(string apikey, string tag);
         public Task<Response<List<Bookmark>>> GetBookmarksWithTag(string apikey, string tag);
 
+        //# Search
+        public Task<Response<SearchResult>> Search(string apikey, string query);
+
     }
 
     public class BookmarkService : IBookmarkService
@@ -420,6 +423,28 @@ namespace BookmarksFront.Classes.Services
 
 
                 var r = Response<List<Bookmark>>.FromJson(await response.Content.ReadAsStringAsync(),
+                    (int)response.StatusCode);
+
+                return r;
+
+
+            }
+        }
+
+
+        //## Search
+
+        public async Task<Response<SearchResult>> Search(string apikey, string query)
+        {
+            using (var requestMessage =
+                   new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/search?{query}"))
+            {
+                requestMessage.Headers.Add("APIKEY", apikey);
+                var response = await httpClient.SendAsync(requestMessage);
+
+
+
+                var r = Response<SearchResult>.FromJson(await response.Content.ReadAsStringAsync(),
                     (int)response.StatusCode);
 
                 return r;
