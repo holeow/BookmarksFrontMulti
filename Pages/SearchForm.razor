@@ -13,7 +13,11 @@
 <EditForm Model="model" OnValidSubmit="@OnSubmit">
 	
 	<InputText @bind-Value="model.searchString"></InputText>
-	@if (UsedTags != null)
+	
+
+	<input type="submit" value="Search"/>
+</EditForm>
+@if (UsedTags != null)
 {
 	@foreach (var tag in UsedTags)
 	{
@@ -21,20 +25,17 @@
 		//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
 	}
 }
-
-<input type="submit" value="Search"/>
-</EditForm>
 <h3>Tags available</h3>
 @if (AvailableTags != null)
-	{
+{
 		
-			@foreach (var tag in AvailableTags.OrderBy(a=> a))
-			{
+	@foreach (var tag in AvailableTags.OrderBy(a=> a))
+	{
 				
-				<Tag fill="orange" tag="@tag" OnClick="() => Add(tag)"/>
-				//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
-			}
+		<Tag fill="orange" tag="@tag" OnClick="() => Add(tag)"/>
+		//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
 	}
+}
 
 
 
