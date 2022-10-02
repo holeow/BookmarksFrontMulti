@@ -4,6 +4,7 @@ using BookmarksFront.Classes.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.JSInterop;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -21,5 +22,6 @@ builder.Services.AddSingleton<Auth, Auth>();
 // await builder.Build().RunAsync();
 
 var host = builder.Build();
+WindowSize.runtime = host.Services.GetRequiredService<IJSRuntime>();
 host.Services.GetRequiredService<TempData>();
 await host.RunAsync();
