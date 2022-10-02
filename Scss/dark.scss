@@ -1,0 +1,89 @@
+﻿.page {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    body {
+        background-color: #1d1d1d;
+        color: #aaaaaa;
+    }
+
+    h1 {
+        color: #eeeeee;
+    }
+
+.sidebar {
+    background-color: #101010;
+    width: 250px;
+    height: 100vh;
+    position: sticky;
+    top: 0px;
+
+
+    .top-row {
+        background-color: #101010;
+        border-bottom: 1px solid #222222;
+        justify-content: flex-start;
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+
+        
+    }
+
+    .navbar-toggler {
+            @media (min-width: 641px) {
+                display: none;
+            }
+    }
+
+    &.menu-collapse{
+        display : none;
+
+    }
+}
+.middlepage{
+    display : flex;
+}
+
+.top-row {
+    background-color: #101010;
+    border-bottom: 1px solid #222222;
+    justify-content: space-between;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    .navbar-brand {
+        color: white;
+        text-decoration: unset;
+        margin-left: 10%;
+    }
+}
+
+    #blazor-error-ui {
+        background: black;
+        bottom: 0;
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+        display: none;
+        left: 0;
+        padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

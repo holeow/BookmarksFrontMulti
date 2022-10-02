@@ -1,17 +1,59 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager manager
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
+	    <div class="top-row px-4">
+		    <div class="top-row ps-3 navbar navbar-dark">
+			    <div class="container-fluid">
+				    <a class="navbar-brand" href="">BookmarksFront</a>
+			    </div>
+		    </div>
+		    <button @onclick="menuButtonClick"><Feather icon="menu"/></button>
+	    </div>
+	    <div class="middlepage">
+	    <NavMenu Collapse="collapseMenu" @ref="menu" />
+	    
+	    <article class="content px-4">
+		    @Body
+			
+	    </article>
+	    <p>@message</p>
+	    </div>
     </main>
 </div>
+
+@code{
+
+	private NavMenu? menu;
+	public string message;
+
+	public bool collapseMenu { get; set; } = true;
+	public async Task menuButtonClick()
+	{
+
+		collapseMenu = !collapseMenu;
+		StateHasChanged();
+
+
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		manager.LocationChanged += OnLocationChange;
+	}
+
+	void IDisposable.Dispose()
+	{
+		manager.LocationChanged -= OnLocationChange;
+	}
+
+	public void OnLocationChange(object? lala, LocationChangedEventArgs args)
+	{
+		collapseMenu = true;
+		StateHasChanged();
+	}
+}
