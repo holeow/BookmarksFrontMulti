@@ -1,6 +1,6 @@
 ﻿@page "/folders/{folderID:int}/folders/add"
 @using System.ComponentModel.DataAnnotations
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService bookmark
 @inject NavigationManager navmanager
 
@@ -38,11 +38,12 @@
 	public async Task Submit(EditContext context)
 	{
 		Classes.Folder folder = new Classes.Folder() {Container = folderID, Name = model.name, ImgUrl = string.IsNullOrWhiteSpace(model.ImgUrl) ? null : model.ImgUrl};
-		var result = await bookmark.PostFolder(key.APIKey, folder);
+		var result = await bookmark.PostFolder( folder);
 
 		if (result.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 		else
 		{
@@ -52,8 +53,7 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
-		var apikey = key.APIKey;
+		if (await Auth.ConnectionRequired()) return;
 	}
 
 

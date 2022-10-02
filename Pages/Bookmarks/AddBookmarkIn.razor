@@ -1,9 +1,9 @@
 ﻿@page "/folders/{folderID:int}/bookmarks/add"
 @using System.ComponentModel.DataAnnotations
 @using BookmarksFront.Classes
-@inject CheckKey key
 @inject IBookmarkService bookmark
 @inject NavigationManager navmanager
+@inject Auth Auth
 
 <h3>Add Bookmark In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
 
@@ -66,10 +66,10 @@
 
 		};
 
-		var result = await bookmark.PostBookmark(key.APIKey, b);
+		var result = await bookmark.PostBookmark(b);
 		if (result.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
 		}
 		else if (result.isSuccess)
 		{
@@ -83,7 +83,9 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
-		var apikey = key.APIKey;
+		if (await Auth.ConnectionRequired())
+		{
+			return;
+		}
 	}
 }

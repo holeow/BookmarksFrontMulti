@@ -27,6 +27,8 @@ using System.Text;
 //#         link:v:"# PUT folder tags"
 //#         link:v:"# GET folders with tag"
 //#         link:v:"# GET bookmarks with tag"
+//# link:v:"## Search"
+//# link:v:"## User"
 
 
 namespace BookmarksFront.Classes.Services
@@ -35,30 +37,35 @@ namespace BookmarksFront.Classes.Services
     public interface IBookmarkService
     {
         //# Folders
-        public Task<Response<FolderContent>> GetRootFolderContent(string apikey);
-        public Task<Response<FolderContent>> GetFolderContent(string apikey, int folderID);
-        public Task<Response<Folder>> PostFolder(string apikey, Folder folder);
-        public Task<Response<Folder>> PutFolder(string apikey, Folder folder);
-        public Task<Response<Folder>> GetFolder(string apikey, int folderID);
-        public Task<Response<int>> DeleteFolder(string apikey, int folderID);
+        public Task<Response<FolderContent>> GetRootFolderContent();
+        public Task<Response<FolderContent>> GetFolderContent( int folderID);
+        public Task<Response<Folder>> PostFolder( Folder folder);
+        public Task<Response<Folder>> PutFolder( Folder folder);
+        public Task<Response<Folder>> GetFolder( int folderID);
+        public Task<Response<int>> DeleteFolder( int folderID);
 
         //# Bookmarks
-        public Task<Response<Bookmark>> PostBookmark (string apikey, Bookmark bookmark);
-        public Task<Response<Bookmark>> GetBookmark(string apikey, int bookmarkID);
-        public Task<Response<Bookmark>> PutBookmark(string apikey, Bookmark bookmark);
-        public Task<Response<int>> DeleteBookmark(string apikey, int bookmarkID);
+        public Task<Response<Bookmark>> PostBookmark ( Bookmark bookmark);
+        public Task<Response<Bookmark>> GetBookmark( int bookmarkID);
+        public Task<Response<Bookmark>> PutBookmark( Bookmark bookmark);
+        public Task<Response<int>> DeleteBookmark( int bookmarkID);
 
         //# Tags
-        public Task<Response<List<string>>> GetTagsOfUser(string apikey);
-        public Task<Response<List<string>>> GetTagsOfBookmark(string apikey, int bookmarkID);
-        public Task<Response<List<string>>> GetTagsOfFolder(string apikey, int folderID);
-        public Task<Response<object>> PutBookmarkTags(string apikey, int bookmarkID, List<string> tags);
-        public Task<Response<object>> PutFolderTags(string apikey, int folderID, List<string> tags);
-        public Task<Response<List<Folder>>> GetFoldersWithTag(string apikey, string tag);
-        public Task<Response<List<Bookmark>>> GetBookmarksWithTag(string apikey, string tag);
+        public Task<Response<List<string>>> GetTagsOfUser();
+        public Task<Response<List<string>>> GetTagsOfBookmark( int bookmarkID);
+        public Task<Response<List<string>>> GetTagsOfFolder( int folderID);
+        public Task<Response<object>> PutBookmarkTags( int bookmarkID, List<string> tags);
+        public Task<Response<object>> PutFolderTags( int folderID, List<string> tags);
+        public Task<Response<List<Folder>>> GetFoldersWithTag( string tag);
+        public Task<Response<List<Bookmark>>> GetBookmarksWithTag( string tag);
 
         //# Search
-        public Task<Response<SearchResult>> Search(string apikey, string query);
+        public Task<Response<SearchResult>> Search( string query);
+
+        //# User
+        public Task<Response<WebUser>> GetUser();
+
+        public Task<Response<RemoteConnection>> GetRemoteConnection(string username, string pass);
 
     }
 
@@ -82,12 +89,13 @@ namespace BookmarksFront.Classes.Services
         /// </summary>
         /// <param name="apikey">The api key of the user</param>
         /// <returns></returns>
-        public async Task<Response<FolderContent>> GetRootFolderContent(string apikey)
+        public async Task<Response<FolderContent>> GetRootFolderContent()
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, "https://apibookmarks.hlw.ninja/api/user/root/content"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
                 var r = Response<FolderContent>.FromJson(await response.Content.ReadAsStringAsync(),
@@ -106,12 +114,13 @@ namespace BookmarksFront.Classes.Services
         /// <param name="apikey">The api key of the user</param>
         /// <param name="folderID"></param>
         /// <returns></returns>
-        public async Task<Response<FolderContent>> GetFolderContent(string apikey, int folderID)
+        public async Task<Response<FolderContent>> GetFolderContent( int folderID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/folders/{folderID}/content"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -127,12 +136,13 @@ namespace BookmarksFront.Classes.Services
 
 
         //# POST Folder
-        public async Task<Response<Folder>> PostFolder(string apikey, Folder folder)
+        public async Task<Response<Folder>> PostFolder( Folder folder)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Post, $"https://apibookmarks.hlw.ninja/api/folders"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(folder), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -147,12 +157,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# PUT Folder
-        public async Task<Response<Folder>> PutFolder(string apikey, Folder folder)
+        public async Task<Response<Folder>> PutFolder( Folder folder)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Put, $"https://apibookmarks.hlw.ninja/api/folders/{folder.ID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(folder), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -167,12 +178,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# GET Folder
-        public async Task<Response<Folder>> GetFolder(string apikey, int folderID)
+        public async Task<Response<Folder>> GetFolder( int folderID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/folders/{folderID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -188,12 +200,13 @@ namespace BookmarksFront.Classes.Services
 
 
         //# DELETE Folder
-        public async Task<Response<int>> DeleteFolder(string apikey, int folderID)
+        public async Task<Response<int>> DeleteFolder( int folderID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Delete, $"https://apibookmarks.hlw.ninja/api/folders/{folderID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 //requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bookmark), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -211,12 +224,13 @@ namespace BookmarksFront.Classes.Services
 
         //## Bookmarks
         //# GET Bookmark
-        public async Task<Response<Bookmark>> GetBookmark(string apikey, int bookmarkID)
+        public async Task<Response<Bookmark>> GetBookmark( int bookmarkID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/bookmarks/{bookmarkID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -231,12 +245,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# POST Bookmark
-        public async Task<Response<Bookmark>> PostBookmark(string apikey, Bookmark bookmark)
+        public async Task<Response<Bookmark>> PostBookmark( Bookmark bookmark)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Post, $"https://apibookmarks.hlw.ninja/api/bookmarks"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bookmark), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -251,12 +266,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# PUT Bookmark
-        public async Task<Response<Bookmark>> PutBookmark(string apikey, Bookmark bookmark)
+        public async Task<Response<Bookmark>> PutBookmark( Bookmark bookmark)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Put, $"https://apibookmarks.hlw.ninja/api/bookmarks/{bookmark.ID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bookmark), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -271,12 +287,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# DELETE Bookmark
-        public async Task<Response<int>> DeleteBookmark(string apikey, int bookmarkID)
+        public async Task<Response<int>> DeleteBookmark( int bookmarkID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Delete, $"https://apibookmarks.hlw.ninja/api/bookmarks/{bookmarkID}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 //requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bookmark), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -293,14 +310,15 @@ namespace BookmarksFront.Classes.Services
 
         //## Tags
         //# GET user tags
-        public async Task<Response<List<string>>> GetTagsOfUser(string apikey)
+        public async Task<Response<List<string>>> GetTagsOfUser()
         {
            
                 using (var requestMessage =
                        new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/tags/"))
                 {
-                    requestMessage.Headers.Add("APIKEY", apikey);
-                    var response = await httpClient.SendAsync(requestMessage);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
+                var response = await httpClient.SendAsync(requestMessage);
 
 
 
@@ -315,12 +333,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# GET bookmark tags
-        public async Task<Response<List<string>>> GetTagsOfBookmark(string apikey, int bookmarkID)
+        public async Task<Response<List<string>>> GetTagsOfBookmark( int bookmarkID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/bookmarks/{bookmarkID}/tags"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -335,12 +354,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# GET folder tags
-        public async Task<Response<List<string>>> GetTagsOfFolder(string apikey, int folderID)
+        public async Task<Response<List<string>>> GetTagsOfFolder( int folderID)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/folders/{folderID}/tags"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -354,12 +374,13 @@ namespace BookmarksFront.Classes.Services
             }
         }
         //# PUT bookmark tags
-        public async Task<Response<object>> PutBookmarkTags(string apikey, int bookmarkID, List<string> tags)
+        public async Task<Response<object>> PutBookmarkTags( int bookmarkID, List<string> tags)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Put, $"https://apibookmarks.hlw.ninja/api/bookmarks/{bookmarkID}/tags"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(new Dictionary<string, object>(){{"tags",tags}}), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -374,12 +395,13 @@ namespace BookmarksFront.Classes.Services
         }
 
         //# PUT folder tags
-        public async Task<Response<object>> PutFolderTags(string apikey, int folderID, List<string> tags)
+        public async Task<Response<object>> PutFolderTags( int folderID, List<string> tags)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Put, $"https://apibookmarks.hlw.ninja/api/folders/{folderID}/tags"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 requestMessage.Content = new StringContent(JsonConvert.SerializeObject(new Dictionary<string, object>() { { "tags", tags } }), Encoding.UTF8, "application/json");
                 var response = await httpClient.SendAsync(requestMessage);
 
@@ -393,12 +415,13 @@ namespace BookmarksFront.Classes.Services
             }
         }
         //# GET folders with tag
-        public async Task<Response<List<Folder>>> GetFoldersWithTag(string apikey, string tag)
+        public async Task<Response<List<Folder>>> GetFoldersWithTag( string tag)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/tags/{tag}/folders"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -412,12 +435,13 @@ namespace BookmarksFront.Classes.Services
             }
         }
         //# GET bookmarks with tag
-        public async Task<Response<List<Bookmark>>> GetBookmarksWithTag(string apikey, string tag)
+        public async Task<Response<List<Bookmark>>> GetBookmarksWithTag( string tag)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/tags/{tag}/bookmarks"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -434,12 +458,13 @@ namespace BookmarksFront.Classes.Services
 
         //## Search
 
-        public async Task<Response<SearchResult>> Search(string apikey, string query)
+        public async Task<Response<SearchResult>> Search( string query)
         {
             using (var requestMessage =
                    new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/search?{query}"))
             {
-                requestMessage.Headers.Add("APIKEY", apikey);
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
                 var response = await httpClient.SendAsync(requestMessage);
 
 
@@ -449,6 +474,48 @@ namespace BookmarksFront.Classes.Services
 
                 return r;
 
+
+            }
+        }
+
+        //## User
+        public async Task<Response<WebUser>> GetUser()
+        {
+            using (var requestMessage =
+                   new HttpRequestMessage(HttpMethod.Get, $"https://apibookmarks.hlw.ninja/api/user"))
+            {
+                var auth = await Auth.instance.GetAuth();
+                requestMessage.Headers.Add(auth.authType, auth.code);
+                var response = await httpClient.SendAsync(requestMessage);
+
+
+
+                var r = Response<WebUser>.FromJson(await response.Content.ReadAsStringAsync(),
+                    (int)response.StatusCode);
+
+                return r;
+
+
+            }
+        }
+
+        public record Connection(string username, string password);
+        public async Task<Response<RemoteConnection>> GetRemoteConnection(string username, string pass)
+        {
+            using (var requestMessage =
+                   new HttpRequestMessage(HttpMethod.Post, $"https://apibookmarks.hlw.ninja/api/auth/login"))
+            {
+                Connection pl = new Connection(username, pass);
+                
+                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(pl), Encoding.UTF8, "application/json");
+                var response = await httpClient.SendAsync(requestMessage);
+
+                
+
+                var r = Response<RemoteConnection>.FromJson(await response.Content.ReadAsStringAsync(),
+                    (int)response.StatusCode);
+
+                return r;
 
             }
         }

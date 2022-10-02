@@ -1,5 +1,5 @@
 ﻿@page "/folders/{folderID:int}/edit"
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
@@ -83,13 +83,14 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
-		response = await BookmarkService.GetFolder(key.APIKey, folderID);
+		response = await BookmarkService.GetFolder(folderID);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
 		if (response.isSuccess)
@@ -97,7 +98,7 @@ else
 			model.name = response.content?.Name;
 			model.ImgUrl = response.content?.ImgUrl;
 
-			tagsresponse = await BookmarkService.GetTagsOfFolder(key.APIKey, folderID);
+			tagsresponse = await BookmarkService.GetTagsOfFolder( folderID);
 
 			if (tagsresponse.isSuccess)
 			{
@@ -112,11 +113,12 @@ else
 		response.content.ImgUrl = model.ImgUrl;
 		response.content.Name = model.name;
 
-		var responseToSend = await BookmarkService.PutFolder(key.APIKey, response.content);
+		var responseToSend = await BookmarkService.PutFolder( response.content);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 		if (!response.isSuccess)
 		{
@@ -128,7 +130,7 @@ else
 			var diffInputNumber = tagsInText.Count() != tagsresponse.content.Count;
 			if (diffInputNumber || (tagsInText.Any(a => !tagsresponse.content.Contains(a))))
 			{
-				var putresponse = await BookmarkService.PutFolderTags(key.APIKey, folderID, tagsInText.ToList());
+				var putresponse = await BookmarkService.PutFolderTags(folderID, tagsInText.ToList());
 			}
 			var ret = tempdata["return"] as string;
 

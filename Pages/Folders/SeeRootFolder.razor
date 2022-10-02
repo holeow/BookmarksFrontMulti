@@ -4,6 +4,7 @@
 @inject CheckKey key
 @inject IBookmarkService bookmarks
 @inject UserAgent UA
+@inject Auth Auth
 
 
 
@@ -70,20 +71,17 @@
 
 	Response<FolderContent> response;
 	Classes.Folder current => response.content.current;
-	
+
 	protected override async Task OnInitializedAsync()
 	{
-		
-		await key.Check();
-		var apikey = key.APIKey;
-
+		if (await Auth.ConnectionRequired()) return;
 		
 
 
-		response = await bookmarks.GetRootFolderContent(apikey);
+		response = await bookmarks.GetRootFolderContent();
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
 		}
 
 		

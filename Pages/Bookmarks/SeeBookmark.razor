@@ -1,7 +1,7 @@
 ﻿@page "/bookmarks/{bookmarkID:int}"
 @using BookmarksFront.Classes
 @inject IBookmarkService BookmarkService
-@inject CheckKey key
+@inject Auth Auth
 
 @if (response == null)
 {
@@ -54,14 +54,15 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
-		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+		if (await Auth.ConnectionRequired()) return;
+		response = await BookmarkService.GetBookmark( bookmarkID);
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
-		tagsresponse = await BookmarkService.GetTagsOfBookmark(key.APIKey, bookmarkID);
+		tagsresponse = await BookmarkService.GetTagsOfBookmark( bookmarkID);
 
 
 	}

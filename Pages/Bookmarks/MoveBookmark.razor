@@ -1,5 +1,5 @@
 ﻿@page "/bookmarks/{bookmarkID:int}/move"
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
@@ -64,13 +64,14 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
-		currentbookmark = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+		currentbookmark = await BookmarkService.GetBookmark( bookmarkID);
 
 		if (currentbookmark.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 		if (!currentbookmark.isSuccess)
 		{
@@ -78,10 +79,11 @@ else
 		}
 		if (currentbookmark.isSuccess)
 		{
-			currentFolder = await BookmarkService.GetFolderContent(key.APIKey, currentbookmark.content.Folder);
+			currentFolder = await BookmarkService.GetFolderContent( currentbookmark.content.Folder);
 			if (currentFolder.httpcode == 401)
 			{
-				await key.ResetKeyAndRedirect();
+				await Auth.ResetConnection();
+				return;
 			}
 
 			if (!currentFolder.isSuccess)
@@ -96,10 +98,11 @@ else
 	public async Task Place(int id)
 	{
 		currentbookmark.content.Folder = id;
-		var res = await BookmarkService.PutBookmark(key.APIKey, currentbookmark.content);
+		var res = await BookmarkService.PutBookmark( currentbookmark.content);
 		if (res.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
 		if (!res.isSuccess)
@@ -114,10 +117,11 @@ else
 
 	public async Task Navigate(int id)
 	{
-		currentFolder = await BookmarkService.GetFolderContent(key.APIKey, id);
+		currentFolder = await BookmarkService.GetFolderContent( id);
 		if (currentFolder.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
 		if (!currentFolder.isSuccess)

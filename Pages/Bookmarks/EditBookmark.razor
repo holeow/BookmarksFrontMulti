@@ -1,5 +1,5 @@
 ﻿@page "/bookmarks/{bookmarkID:int}/edit"
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
@@ -104,15 +104,16 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
 
 
-		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+		response = await BookmarkService.GetBookmark( bookmarkID);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
 		if (response.isSuccess)
@@ -122,7 +123,7 @@ else
 			model.Url = response.content?.URL;
 			model.Comment = response.content?.Comment;
 
-			tagsresponse = await BookmarkService.GetTagsOfBookmark(key.APIKey, bookmarkID);
+			tagsresponse = await BookmarkService.GetTagsOfBookmark(bookmarkID);
 
 			if (tagsresponse.isSuccess)
 			{
@@ -137,11 +138,11 @@ else
 		response.content.Name = model.name;
 		response.content.URL = model.Url;
 		response.content.Comment = model.Comment;
-		var responseToSend = await BookmarkService.PutBookmark(key.APIKey, response.content);
+		var responseToSend = await BookmarkService.PutBookmark( response.content);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
 		}
 		if (!response.isSuccess)
 		{
@@ -153,7 +154,7 @@ else
 			var diffInputNumber = tagsInText.Count() != tagsresponse.content.Count;
 			if (diffInputNumber || (tagsInText.Any(a => !tagsresponse.content.Contains(a))))
 			{
-				var putresponse = await BookmarkService.PutBookmarkTags(key.APIKey, bookmarkID, tagsInText.ToList());
+				var putresponse = await BookmarkService.PutBookmarkTags( bookmarkID, tagsInText.ToList());
 			}
 
 			var ret = tempdata["return"] as string;

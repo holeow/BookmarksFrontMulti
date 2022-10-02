@@ -1,11 +1,11 @@
 ﻿@page "/searchform"
-@inject CheckKey key
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
 @inject UserAgent UA
+@inject Auth Auth
 
 
 <h3>Search</h3>
@@ -55,15 +55,16 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		if (await Auth.ConnectionRequired()) return;
+
 		
 
-		await key.Check();
-
-		response = await BookmarkService.GetTagsOfUser(key.APIKey);
+		response = await BookmarkService.GetTagsOfUser();
 		AvailableTags = response?.content;
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
 	}

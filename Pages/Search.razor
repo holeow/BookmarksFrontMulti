@@ -1,5 +1,5 @@
 ﻿@page "/search"
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
@@ -57,7 +57,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
 		var uri = manager.ToAbsoluteUri(manager.Uri);
 		string tags = null;
@@ -79,10 +79,11 @@ else
 		if (tags != null && name != null) str += "&";
 		if (name != null) str += "name=" + name;
 
-		response = await BookmarkService.Search(key.APIKey, str);
+		response = await BookmarkService.Search( str);
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 	}
 

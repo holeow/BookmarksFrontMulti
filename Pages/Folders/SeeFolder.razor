@@ -1,7 +1,7 @@
 ﻿@page "/folders/{folderID:int}/content"
 @using BookmarksFront.Classes
 @inject IBookmarkService BookmarkService
-@inject CheckKey key
+@inject Auth Auth
 
 
 @if (response == null)
@@ -93,16 +93,17 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
-		var apikey = key.APIKey;
-		response = await BookmarkService.GetFolderContent(apikey, folderID);
+		
+		response = await BookmarkService.GetFolderContent( folderID);
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 
-		tagsresponse = await BookmarkService.GetTagsOfFolder(key.APIKey, folderID);
+		tagsresponse = await BookmarkService.GetTagsOfFolder(folderID);
 
 	}
 }

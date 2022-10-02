@@ -1,9 +1,10 @@
 ﻿@page "/bookmarks/{bookmarkID:int}/deleteconfirmation"
-@inject CheckKey key
+@inject Auth Auth
 @inject IBookmarkService BookmarkService
 @inject NavigationManager manager
 @using BookmarksFront.Components
 @using BookmarksFront.Classes
+
 
 @if (response == null)
 {
@@ -54,23 +55,25 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{
-		await key.Check();
+		if (await Auth.ConnectionRequired()) return;
 
-		response = await BookmarkService.GetBookmark(key.APIKey, bookmarkID);
+		response = await BookmarkService.GetBookmark( bookmarkID);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 	}
 
 	public async Task Confirm(EditContext context)
 	{
-		var responseToSend = await BookmarkService.DeleteBookmark(key.APIKey, bookmarkID);
+		var responseToSend = await BookmarkService.DeleteBookmark( bookmarkID);
 
 		if (response.httpcode == 401)
 		{
-			await key.ResetKeyAndRedirect();
+			await Auth.ResetConnection();
+			return;
 		}
 		if (!response.isSuccess)
 		{

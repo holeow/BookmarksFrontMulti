@@ -1,13 +1,21 @@
 ﻿@page "/setkey"
 @using BookmarksFront.Classes
+@using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
 @inject ICookie cookie
 @inject UserAgent UA
+@inject Auth Auth
+@inject IBookmarkService BookmarkService
+@inject TempData tempdata
+@inject NavigationManager manager
 
 
 
-
+@if (isKeyAuthChosen)
+{
 	<h2>SetKey</h2>
+
+	<button @onclick=ChangeMode >Use username/password instead</button>
 
 	<h3>How to get a key ?</h3>
 	<p>
@@ -19,40 +27,103 @@
 			<li>Save your key somewhere safe, we will give you each key only once then hide it.</li>
 			<li>Don't share your key to anyone else. Someone with your key can access and modify all your data!</li>
 		</ul></p>
-	<EditForm Model="@model" OnValidSubmit="@Submit">
+	<EditForm Model="@keyModel" OnValidSubmit="@Submit">
 		<label for="key">key</label>
-		<InputText @bind-Value="model.key" id="key"></InputText>
+		<InputText @bind-Value="keyModel.key" id="key"></InputText>
 		<input type="submit" class="btn btn-primary" value="Save"/>
 	</EditForm>
 	<p>@message</p>
+}
+else
+{
+	<h2>Connection</h2>
+	<button @onclick=ChangeMode>Use API Key instead</button>
+	<p>(API KEY makes you able to stay connected indefinitely)</p>
+	<h3>How to Register ?</h3>
+	<p>
+		Go to <a href="https://apibookmarks.hlw.ninja/auth/signup" target="_blank" rel="noopener noreferrer"><Feather icon="link" />The api website</a> and register.
+	</p>
+
+	<EditForm Model="@accountModel" OnValidSubmit="@SubmitAccount">
+		<div>
+			<label for="username">username</label>
+			<InputText @bind-Value="accountModel.username" id="username"></InputText>
+		</div>
+		<div>
+			<label for="password">password</label>
+			<InputText type="password" @bind-Value="accountModel.password" id="password"></InputText >
+		</div>
+		<input type="submit" class="btn btn-primary" value="Login"/>
+	</EditForm>
+	<p>@message</p>
+}
+	
 
 
 
 @code {
 
-	public APIKeyModel model = new APIKeyModel();
+
+	public bool isKeyAuthChosen = false;
+	public (string type, string code) auth;
+
+
+	public APIKeyModel keyModel = new APIKeyModel();
+	public AccountModel accountModel = new();
 	string message = "";
 	public class APIKeyModel
 	{
 		public string key{ get; set; }
 	}
-	
+
+	public class AccountModel
+	{
+		[Required]
+		public string username { get; set; }
+		[Required]
+		public string password { get; set; }
+	}
+
 	int value = 0;
 
 	protected override async Task OnInitializedAsync()
 	{
-	
+		auth = await Auth.GetAuth();
+		isKeyAuthChosen = auth.type == "APIKEY";
 
-		model.key = await APIKey.GetKey(cookie);
+		keyModel.key = await APIKey.GetKey(cookie);
 	}
 
 	public async Task Submit(EditContext context)
 	{
-		await APIKey.SetKey(cookie,model.key);
-		message = $"API Key set to {model.key}";
+		await APIKey.SetKey(cookie,keyModel.key);
+		message = $"API Key set to {keyModel.key}";
 
 	}
 
-	
-	
+	public async Task SubmitAccount(EditContext context)
+	{
+		var remote = await BookmarkService.GetRemoteConnection(accountModel.username, accountModel.password);
+		if (!remote.isSuccess)
+		{
+			message = remote.message;
+
+		}
+		else
+		{
+			Auth.user = remote.content.user;
+			await Auth.SetApiToken(remote.content.token);
+			string temp = tempdata["afterConnectReturn"] as string;
+			if (temp != null)
+				manager.NavigateTo(temp);
+		}
+	}
+
+	public async Task ChangeMode()
+	{
+
+		await Auth.SetChoice(isKeyAuthChosen ? "APITOKEN" : "APIKEY");
+		auth = await Auth.GetAuth();
+		isKeyAuthChosen = auth.type == "APIKEY";
+	}
 }
