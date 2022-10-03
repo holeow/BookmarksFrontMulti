@@ -9,7 +9,7 @@ main {
 }
 
 body {
-  background-color: #1d1d1d;
+  background-color: #2d2d2d;
   color: #aaaaaa;
 }
 
@@ -19,10 +19,18 @@ h1 {
 
 .sidebar {
   background-color: #101010;
-  width: 250px;
-  height: 100vh;
-  position: sticky;
-  top: 0px;
+  width: 180px;
+  min-width: 180px;
+  height: calc(100vh - 3.5rem - 1px);
+  position: fixed;
+  top: calc(3.5rem + 1px);
+  transition: left 1s;
+}
+@media (min-width: 641px) {
+  .sidebar {
+    position: relative;
+    top: 0;
+  }
 }
 .sidebar .top-row {
   background-color: #101010;
@@ -32,13 +40,13 @@ h1 {
   display: flex;
   align-items: center;
 }
-@media (min-width: 641px) {
-  .sidebar .navbar-toggler {
-    display: none;
-  }
-}
 .sidebar.menu-collapse {
-  display: none;
+  left: -250px;
+}
+@media (min-width: 641px) {
+  .sidebar.menu-collapse {
+    left: 0;
+  }
 }
 
 .middlepage {
@@ -61,6 +69,27 @@ h1 {
   text-decoration: unset;
   margin-left: 10%;
 }
+.top-row .sidebar-toggler {
+  all: unset;
+  cursor: pointer;
+  margin-right: 7px;
+  border-radius: 5px;
+  border-color: #cccccc;
+  border-style: double;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-items: flex-end;
+  align-items: center;
+}
+.top-row .sidebar-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.1882352941);
+}
+@media (min-width: 641px) {
+  .top-row .sidebar-toggler {
+    display: none;
+  }
+}
 
 #blazor-error-ui {
   background: black;
@@ -79,6 +108,38 @@ h1 {
   position: absolute;
   right: 0.75rem;
   top: 0.5rem;
+}
+
+button {
+  all: unset;
+  color: white;
+  background-color: #111111;
+  border-color: grey;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+button:hover {
+  background-color: #333333;
+}
+
+input {
+  all: unset;
+  background-color: #111111;
+  color: white;
+  border-color: grey;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+}
+input[type=submit] {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+input[type=submit]:hover {
+  background-color: #333333;
 }
 
 /*# sourceMappingURL=dark.css.map */
