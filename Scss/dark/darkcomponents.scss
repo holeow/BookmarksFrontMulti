@@ -1,0 +1,30 @@
+﻿
+.component-folder {
+    
+    .main-icon{
+        fill:gold;
+        
+    }
+
+    .delete-link {
+        color: red;
+
+        &:hover {
+            color: darkred;
+        }
+    }
+}
+.component-bookmark {
+
+    .main-icon{
+        fill:green;
+    }
+
+    .delete-link {
+        color: red;
+
+        &:hover {
+            color: darkred;
+        }
+    }
+}

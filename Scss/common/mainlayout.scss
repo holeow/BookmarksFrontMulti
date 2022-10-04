@@ -92,7 +92,7 @@ main {
 .content {
     padding-left: 5%;
     padding-right: 5%;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 #blazor-error-ui {
@@ -149,4 +149,9 @@ main {
             border-style: solid;
         }
     }
+}
+
+.feather{
+    height:1.5rem;
+    width:1.5rem;
 }

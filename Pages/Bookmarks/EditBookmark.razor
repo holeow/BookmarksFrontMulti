@@ -35,7 +35,7 @@ else if (!response.isSuccess)
 }
 else
 {
-	<h3>Edit Bookmark @response.content.Name (<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+	<h3>Edit Bookmark @response.content.Name (<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
 
 	<EditForm Model="@model" OnValidSubmit="@Submit">
 		<DataAnnotationsValidator />

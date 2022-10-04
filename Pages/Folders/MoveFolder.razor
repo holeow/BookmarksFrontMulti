@@ -17,12 +17,12 @@ else
 {
 	@if (currentFolder.content.Container == null)
 	{
-		<h3>Impossible(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</h3>
+		<h3>Impossible(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left"  width="32" height="32"/></a>)</h3>
 		<p style="color: red;">Impossible to move root folder.</p>
 	}
 	else
 	{
-		<h3>Move folder : @currentFolder.content.Name (<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+		<h3>Move folder : @currentFolder.content.Name (<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
 		@if (currentContainer == null)
 		{
 			<p>Loading, please wait...</p>
@@ -33,7 +33,7 @@ else
 			@if (currentContainer.content.current.Container == null)
 			{
 				<h3>
-					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+					<Feather icon="folder"  height="32" width="32" />
 					@(currentContainer.content.current.Name) (<a @onclick="() => Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>)
 				</h3>
 			}
@@ -43,8 +43,8 @@ else
 					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
 					@currentContainer.content.current.Name
 					(
-					<a @onclick="()=> Navigate(currentContainer.content.current.Container.Value)"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>
-					<a @onclick="()=> Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>
+					<a @onclick="()=> Navigate(currentContainer.content.current.Container.Value)"><Feather icon="corner-up-left"  width="32" height="32" /></a>
+					<a @onclick="()=> Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle"  height="32" width="32" /></a>
 					)
 				</h3>
 			}
@@ -61,7 +61,7 @@ else
 				else
 				{
 					<div>
-						<Feather icon="folder" fill="yellow" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+						<Feather icon="folder"  /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
 						(<a @onclick="() => Place(item.ID)"><Feather stroke="blue" icon="arrow-down-circle" /></a>)
 					</div>
 				}

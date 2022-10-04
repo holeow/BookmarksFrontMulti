@@ -1,0 +1,34 @@
+﻿@implements IDisposable
+
+@if(width >=641){
+	<table class="@classes">
+		@ChildContent
+	</table>
+}
+else{
+	<div class="@classes">
+		@ChildContent
+	</div>
+}
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+	[Parameter]
+	public string ? classes { get; set; }
+	float width { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		WindowSize.WindowSizeChanged += OnWindowResize;
+		width = await WindowSize.GetWidth();
+	}
+
+	public void OnWindowResize(float width, float height){
+		this.width = width;
+	}
+
+	void IDisposable.Dispose(){
+		WindowSize.WindowSizeChanged -= OnWindowResize;
+	}
+}

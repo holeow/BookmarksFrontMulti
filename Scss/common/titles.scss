@@ -1,2 +1,22 @@
-﻿body {
+﻿h1, h2, h3, h4, h5, h6 {
+   all:unset;
+   display : block;
+   margin-bottom: 8px;
+   font-weight:700;
+}
+
+h1{
+    font-size: 36px;
+}
+h2{
+    font-size : 32px;
+}
+h3{
+    font-size : 28px;
+
+    .feather{
+        height : 28px;
+        width : 28px;
+        stroke-width: 3px;
+    }
 }

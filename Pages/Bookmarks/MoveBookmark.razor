@@ -15,7 +15,7 @@ else if (!currentbookmark.isSuccess)
 }
 else
 {
-	<h3>Move bookmark : @currentbookmark.content.Name (<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+	<h3>Move bookmark : @currentbookmark.content.Name (<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
 	@if (currentFolder == null)
 	{
 		<p>Loading, please wait...</p>
@@ -27,17 +27,17 @@ else
 		{
 			<h3>
 				<Feather icon="folder" fill="#4040FF" height="32" width="32" />
-				@(currentFolder.content.current.Name) (<a @onclick="() => Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32"/></a>)
+				@(currentFolder.content.current.Name) (<a @onclick="() => Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  height="32" width="32"/></a>)
 			</h3>
 		}
 		else
 		{
 			<h3>
-				<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+				<Feather icon="folder"  height="32" width="32" />
 				@currentFolder.content.current.Name
 				(
-				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>
-				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>
+				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left"  width="32" height="32"/></a>
+				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  height="32" width="32" /></a>
 				)
 			</h3>
 		}
@@ -45,8 +45,8 @@ else
 		@foreach (var item in currentFolder.content.children)
 		{
 			<div>
-				<Feather icon="folder" fill="yellow"/><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
-				(<a @onclick="() => Place(item.ID)"><Feather stroke="blue" icon="arrow-down-circle"/></a>)
+				<Feather icon="folder" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+				(<a @onclick="() => Place(item.ID)"><Feather  icon="arrow-down-circle"/></a>)
 			</div>
 		}
 	}

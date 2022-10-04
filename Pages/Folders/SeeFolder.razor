@@ -11,27 +11,27 @@
 else if (response.isSuccess)
 {
 
-	<h3><Feather icon="folder" fill="#4040FF" height="32" width="32"/>
+	<h3><Feather icon="folder"  height="32" width="32"/>
 		@if (current.Container == null)
 		{
 			@current.Name
 		}
 		else
 		{
-			<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a> <A href="@($"/folders/{current.ID}/edit")" return="@($"/folders/{current.ID}/content")" folderdata=@current><Feather stroke="blue" icon="edit" height="32" width="32" /></A>)</span>
+			<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a> <A href="@($"/folders/{current.ID}/edit")" return="@($"/folders/{current.ID}/content")" folderdata=@current><Feather  icon="edit" height="32" width="32" /></A>)</span>
 		}
 	</h3>
 	<hr/>
-	<h3><Feather icon="folder" height="32" width="32"/> Folders (<a href="/folders/@(current.ID)/folders/add"><Feather icon="folder-plus" height="32" width="32" stroke="blue"/></a>)</h3>
+	<h3><Feather icon="folder" height="32" width="32"/> Folders (<a href="/folders/@(current.ID)/folders/add"><Feather icon="folder-plus" height="32" width="32" /></a>)</h3>
 	@foreach (Classes.Folder f in response.content.children)
 	{
-		<Folder fillColor="yellow" folder="f"/>
+		<Folder  folder="f"/>
 	}
 	<hr/>
-	<h3><Feather icon="bookmark" height="32" width="32"/>Bookmarks (<a href="/folders/@(current.ID)/bookmarks/add"><Feather icon="plus-square" height="32" width="32" stroke="blue"/></a>)</h3>
+	<h3><Feather icon="bookmark" height="32" width="32"/>Bookmarks (<a href="/folders/@(current.ID)/bookmarks/add"><Feather icon="plus-square" height="32" width="32" /></a>)</h3>
 	@foreach (Classes.Bookmark b in response.content.bookmarks)
 	{
-		<Bookmark fillColor="green" bookmark="b"/>
+		<Bookmark  bookmark="b"/>
 	}
 	<hr/>
 	<h3><Feather icon="tag" width="32" height="32"/>Tags</h3>
@@ -40,7 +40,7 @@ else if (response.isSuccess)
 	{
 		@foreach (var tag in tagsresponse.content)
 		{
-			<span class="tag"><Feather icon="tag" fill="orange"/>[&ensp;@tag&ensp;]</span>
+			<span class="tag"><Feather icon="tag" />[&ensp;@tag&ensp;]</span>
 		}
 	}
 }

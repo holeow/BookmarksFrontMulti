@@ -84,7 +84,7 @@ main {
 .content {
   padding-left: 5%;
   padding-right: 5%;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 #blazor-error-ui {
@@ -136,6 +136,11 @@ main {
   border-style: solid;
 }
 
+.feather {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 button {
   all: unset;
   border-radius: 4px;
@@ -161,6 +166,40 @@ a {
   all: unset;
   cursor: pointer;
   text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  all: unset;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 32px;
+}
+
+h3 {
+  font-size: 28px;
+}
+h3 .feather {
+  height: 28px;
+  width: 28px;
+  stroke-width: 3px;
+}
+
+.component-folder svg {
+  height: 24px;
+  width: 24px;
+}
+
+.component-bookmark svg {
+  height: 24px;
+  width: 24px;
 }
 
 body {
@@ -244,6 +283,26 @@ a:hover {
 
 h1, h2, h3, h4, h5, h6 {
   color: #eeeeee;
+}
+
+.component-folder .main-icon {
+  fill: gold;
+}
+.component-folder .delete-link {
+  color: red;
+}
+.component-folder .delete-link:hover {
+  color: darkred;
+}
+
+.component-bookmark .main-icon {
+  fill: green;
+}
+.component-bookmark .delete-link {
+  color: red;
+}
+.component-bookmark .delete-link:hover {
+  color: darkred;
 }
 
 /*# sourceMappingURL=dark.css.map */
