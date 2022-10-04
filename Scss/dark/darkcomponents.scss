@@ -28,3 +28,18 @@
         }
     }
 }
+
+.component-move {
+    .main-folder{
+        fill:blue;
+    }
+    .forbidden-folder{
+        fill:red;
+    }
+    .forbidden-move-link{
+        stroke:red;
+    }
+    .folder{
+        fill:gold;
+    }
+}

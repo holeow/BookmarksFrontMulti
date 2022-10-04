@@ -1,6 +1,6 @@
 ﻿@implements IDisposable
 
-@if (width >= 641)
+@if (!mobile)
 {
 	<tr class="@classes">
 		@ChildContent
@@ -8,9 +8,7 @@
 }
 else
 {
-	<div class="@classes">
 		@ChildContent
-	</div>
 }
 
 @code {
@@ -19,11 +17,21 @@ else
 	[Parameter]
 	public string? classes { get; set; }
 	float width { get; set; }
-
+	public bool mobile { get; set; }
 	protected override async Task OnInitializedAsync()
 	{
 		WindowSize.WindowSizeChanged += OnWindowResize;
 		width = await WindowSize.GetWidth();
+		if (width < 641 && !mobile)
+		{
+			mobile = true;
+			StateHasChanged();
+		}
+		if (width >= 641 && mobile)
+		{
+			mobile = false;
+			StateHasChanged();
+		}
 	}
 
 	public void OnWindowResize(float width, float height)

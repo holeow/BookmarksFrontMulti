@@ -15,6 +15,7 @@ else if (!currentbookmark.isSuccess)
 }
 else
 {
+	
 	<h3>Move bookmark : @currentbookmark.content.Name (<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
 	@if (currentFolder == null)
 	{
@@ -22,22 +23,22 @@ else
 	}
 	else
 	{
-		
+		<div class="component-move">
 		@if (currentFolder.content.current.Container == null)
 		{
 			<h3>
-				<Feather icon="folder" fill="#4040FF" height="32" width="32" />
-				@(currentFolder.content.current.Name) (<a @onclick="() => Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  height="32" width="32"/></a>)
+				<Feather icon="folder" classes="main-folder" />
+				@(currentFolder.content.current.Name) (<a @onclick="() => Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  classes="big-move-link"/></a>)
 			</h3>
 		}
 		else
 		{
 			<h3>
-				<Feather icon="folder"  height="32" width="32" />
+				<Feather icon="folder"  classes="main-folder" />
 				@currentFolder.content.current.Name
 				(
-				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left"  width="32" height="32"/></a>
-				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  height="32" width="32" /></a>
+				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left"  /></a>
+				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  classes="big-move-link" /></a>
 				)
 			</h3>
 		}
@@ -45,10 +46,11 @@ else
 		@foreach (var item in currentFolder.content.children)
 		{
 			<div>
-				<Feather icon="folder" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
-				(<a @onclick="() => Place(item.ID)"><Feather  icon="arrow-down-circle"/></a>)
+				<Feather icon="folder" classes="folder" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+				(<a @onclick="() => Place(item.ID)"><Feather  icon="arrow-down-circle" classes="move-link"/></a>)
 			</div>
 		}
+		</div>
 	}
 
 }

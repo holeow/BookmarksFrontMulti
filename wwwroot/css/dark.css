@@ -141,6 +141,11 @@ main {
   width: 1.5rem;
 }
 
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
 button {
   all: unset;
   border-radius: 4px;
@@ -257,20 +262,20 @@ button:hover {
   background-color: #333333;
 }
 
-input {
+input, textarea {
   background-color: #111111;
   color: white;
   border-color: grey;
 }
-input:autofill {
+input:autofill, textarea:autofill {
   background-color: #111111;
   color: white;
   border-color: grey;
 }
-input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, textarea:-webkit-autofill:active {
   transition: all 0s 50000s;
 }
-input[type=submit]:hover {
+input[type=submit]:hover, textarea[type=submit]:hover {
   background-color: #333333;
 }
 
@@ -283,6 +288,9 @@ a:hover {
 
 h1, h2, h3, h4, h5, h6 {
   color: #eeeeee;
+}
+h1 .main-icon, h2 .main-icon, h3 .main-icon, h4 .main-icon, h5 .main-icon, h6 .main-icon {
+  fill: #0000FF;
 }
 
 .component-folder .main-icon {
@@ -303,6 +311,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 .component-bookmark .delete-link:hover {
   color: darkred;
+}
+
+.component-move .main-folder {
+  fill: blue;
+}
+.component-move .forbidden-folder {
+  fill: red;
+}
+.component-move .forbidden-move-link {
+  stroke: red;
+}
+.component-move .folder {
+  fill: gold;
 }
 
 /*# sourceMappingURL=dark.css.map */

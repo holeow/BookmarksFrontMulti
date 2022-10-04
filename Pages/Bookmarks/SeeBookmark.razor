@@ -9,7 +9,7 @@
 }
 else if (response.isSuccess)
 {
-	<h3><Feather icon="bookmark" width="32" height="32"  />@current.Name<span>(<a href="/folders/@(current.Folder)/content"><Feather icon="corner-up-left" width="32" height="32"  /></a> <A href="@($"/bookmarks/{current.ID}/edit")" return="@($"/bookmarks/{current.ID}")" bookmarkdata=@current><Feather  icon="edit" height="32" width="32"/></A>)</span></h3>
+	<h3><Feather icon="bookmark" classes="main-icon" width="32" height="32"  />@current.Name<span>(<a href="/folders/@(current.Folder)/content"><Feather icon="corner-up-left" width="32" height="32"  /></a> <A href="@($"/bookmarks/{current.ID}/edit")" return="@($"/bookmarks/{current.ID}")" bookmarkdata=@current><Feather  icon="edit" height="32" width="32"/></A>)</span></h3>
 	<div><a href="@current.URL"><Feather icon="link"/>@current.URL</a></div>
 	<div><p>@current.Comment</p></div>
 	<hr />

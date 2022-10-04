@@ -6,6 +6,7 @@
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
 @inject TempData tempdata
+@implements IRefreshable
 
 
 @if (response == null)
@@ -36,34 +37,46 @@ else if (!response.isSuccess)
 else
 {
 	<h3>Edit Bookmark @response.content.Name (<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
-
 	<EditForm Model="@model" OnValidSubmit="@Submit">
 		<DataAnnotationsValidator />
 		<ValidationSummary />
+		<CascadingValue Value="this">
+			<ResponsiveTable>
 
-		<div>
-			<label for="name">Name:</label>
-			<InputText id="name" @bind-Value="@model.name" />
-		</div>
-		<div>
-			<label for="url">URL:</label>
-			<InputText id="url" @bind-Value="@model.Url" />
-		</div>
-		<div>
-			<label for="comment">Comment:</label>
-			<InputTextArea id="comment" @bind-Value="@model.Comment" />
-		</div>
-		<div>
-			<label for="imgurl">Image Url:</label>
-			<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
-		</div>
-		<div>
-			<label for="tags">Tags (separated with ","):</label>
-			</div><div>
-			<InputTextArea id="tags" @bind-Value="@model.tags" />
-		</div>
-		<input type="submit" value="Save" />
+				<ResponsiveTr>
+					<ResponsiveTd><label for="name">Name:</label></ResponsiveTd>
+					<ResponsiveTd><InputText id="name" @bind-Value="@model.name" /></ResponsiveTd>
+				</ResponsiveTr>
 
+				<ResponsiveTr>
+					<ResponsiveTd><label for="url">URL:</label></ResponsiveTd>
+					<ResponsiveTd><InputText id="url" @bind-Value="@model.Url" /></ResponsiveTd>
+				</ResponsiveTr>
+
+				<ResponsiveTr>
+					<ResponsiveTd><label for="comment">Comment:</label></ResponsiveTd>
+					<ResponsiveTd><InputTextArea id="comment" @bind-Value="@model.Comment" /></ResponsiveTd>
+				</ResponsiveTr>
+
+				<ResponsiveTr>
+					<ResponsiveTd><label for="imgurl">Image Url:</label></ResponsiveTd>
+					<ResponsiveTd><InputText id="imgurl" @bind-Value="@model.ImgUrl" /></ResponsiveTd>
+				</ResponsiveTr>
+
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2"><label for="tags">Tags (separated with ","):</label></ResponsiveTd>
+				</ResponsiveTr>
+
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2"><InputTextArea id="tags" @bind-Value="@model.tags" /></ResponsiveTd>
+				</ResponsiveTr>
+
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2" classes="flex-end"><input type="submit" value="Save" /></ResponsiveTd>
+				</ResponsiveTr>
+
+			</ResponsiveTable>
+		</CascadingValue>
 	</EditForm>
 }
 <p>@errormessage</p>
@@ -164,7 +177,11 @@ else
 			else{
 				manager.NavigateTo($"/folders/{response.content.Folder}/content");
 			}
-			
+
 		}
+	}
+
+	void IRefreshable.Refresh(){
+		StateHasChanged();
 	}
 }
