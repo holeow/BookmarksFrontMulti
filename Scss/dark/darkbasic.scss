@@ -1,0 +1,45 @@
+﻿button {
+    color: white;
+    background-color: #111111;
+    border-color: grey;
+
+    &:hover {
+        background-color: #333333;
+    }
+}
+
+input {
+    background-color: #111111;
+    color: white;
+    border-color: grey;
+
+    &:autofill {
+        background-color: #111111;
+        color: white;
+        border-color: grey;
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        transition: all 0s 50000s;
+    }
+
+
+    &[type=submit] {
+
+
+        &:hover {
+            background-color: #333333;
+        }
+    }
+}
+
+a {
+    color: #6496ff;
+
+    &:hover {
+        color: #3264ff;
+    }
+}
