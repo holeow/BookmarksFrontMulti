@@ -6,7 +6,7 @@
 @inject Auth Auth
 @implements IRefreshable
 
-<h3>Add Bookmark In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
+<h3>Add Bookmark In Folder n°@folderID <span class="inline-block">(<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left" width="32" height="32" /></a>)</span></h3>
 
 
 <EditForm Model="@model" OnValidSubmit="@Submit">

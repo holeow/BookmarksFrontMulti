@@ -17,12 +17,12 @@ else
 {
 	@if (currentFolder.content.Container == null)
 	{
-		<h3>Impossible(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left"  width="32" height="32"/></a>)</h3>
+		<h3>Impossible<span class="inline-block">(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left"/></a>)</span></h3>
 		<p style="color: red;">Impossible to move root folder.</p>
 	}
 	else
 	{
-		<h3>Move folder : @currentFolder.content.Name (<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
+		<h3>Move folder : @currentFolder.content.Name <span class="inline-block">(<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left" /></a>)</span></h3>
 		@if (currentContainer == null)
 		{
 			<p>Loading, please wait...</p>

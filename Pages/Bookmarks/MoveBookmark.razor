@@ -16,7 +16,7 @@ else if (!currentbookmark.isSuccess)
 else
 {
 	
-	<h3>Move bookmark : @currentbookmark.content.Name (<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
+	<h3>Move bookmark : @currentbookmark.content.Name <span class="inline-block">(<a href="/folders/@(currentbookmark.content.Folder)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</span></h3>
 	@if (currentFolder == null)
 	{
 		<p>Loading, please wait...</p>
@@ -36,10 +36,10 @@ else
 			<h3>
 				<Feather icon="folder"  classes="main-folder" />
 				@currentFolder.content.current.Name
-				(
+				<span class="inline-block">(
 				<a @onclick="()=> Navigate(currentFolder.content.current.Container.Value)"><Feather icon="corner-up-left"  /></a>
 				<a @onclick="()=> Place(currentFolder.content.current.ID)"><Feather icon="arrow-down-circle"  classes="big-move-link" /></a>
-				)
+				)</span>
 			</h3>
 		}
 

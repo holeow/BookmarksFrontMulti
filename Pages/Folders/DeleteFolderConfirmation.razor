@@ -34,12 +34,12 @@ else
 {
 	@if (response.content.Container == null)
 	{
-		<h3>Impossible (<a href="/folders/@(response.content.ID)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
+		<h3>Impossible <span class="inline-block">(<a href="/folders/@(response.content.ID)/content"><Feather icon="corner-up-left"/></a>)</span></h3>
 		<p style="color : red;">Impossible to delete root folder.</p>
 	}
 	else
 	{
-		<h3>Delete folder : @response.content.Name (<a href="/folders/@(response.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+		<h3>Delete folder : @response.content.Name <span class="inline-block">(<a href="/folders/@(response.content.Container)/content"><Feather icon="corner-up-left"/></a>)</span></h3>
 		<p>Are you sure of wanting to delete this folder?</p>
 		<EditForm Model="@response" OnValidSubmit="@Confirm">
 			<input type="submit" value="Confirm" style="background-color : red;">

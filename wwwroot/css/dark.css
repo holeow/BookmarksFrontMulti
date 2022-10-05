@@ -10,6 +10,14 @@
   box-sizing: border-box;
 }
 
+.content {
+  padding-left: 5%;
+  padding-right: 5%;
+  font-size: 1rem;
+  font-family: rubik, sans-serif;
+  word-break: break-word;
+}
+
 svg {
   vertical-align: sub;
 }
@@ -93,13 +101,6 @@ main {
   .top-row .sidebar-toggler {
     display: none;
   }
-}
-
-.content {
-  padding-left: 5%;
-  padding-right: 5%;
-  font-size: 1.25rem;
-  font-family: rubik, sans-serif;
 }
 
 #blazor-error-ui {
