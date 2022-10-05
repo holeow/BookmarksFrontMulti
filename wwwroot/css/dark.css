@@ -141,11 +141,6 @@ main {
   width: 1.5rem;
 }
 
-.flex-end {
-  display: flex;
-  justify-content: flex-end;
-}
-
 button {
   all: unset;
   border-radius: 4px;
@@ -176,35 +171,74 @@ a {
 h1, h2, h3, h4, h5, h6 {
   all: unset;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   font-weight: 700;
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 2.25rem;
+}
+h1 .feather {
+  height: 2.25rem;
+  width: 2.25rem;
+  stroke-width: 0.1875rem;
 }
 
 h2 {
-  font-size: 32px;
+  font-size: 2rem;
+}
+h2 .feather {
+  height: 2rem;
+  width: 2rem;
+  stroke-width: 0.1875rem;
 }
 
 h3 {
-  font-size: 28px;
+  font-size: 1.75rem;
 }
 h3 .feather {
-  height: 28px;
-  width: 28px;
-  stroke-width: 3px;
+  height: 1.75rem;
+  width: 1.75rem;
+  stroke-width: 0.1875rem;
 }
 
 .component-folder svg {
-  height: 24px;
-  width: 24px;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .component-bookmark svg {
-  height: 24px;
-  width: 24px;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.component-tag {
+  padding: 0px 2px 0px 2px;
+  margin: 2px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.component-tag .feather {
+  height: 1rem;
+  width: 1rem;
+}
+.component-tag a {
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.fullwidth {
+  width: 100%;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 body {
@@ -324,6 +358,19 @@ h1 .main-icon, h2 .main-icon, h3 .main-icon, h4 .main-icon, h5 .main-icon, h6 .m
 }
 .component-move .folder {
   fill: gold;
+}
+
+.component-tag {
+  background-color: rgba(255, 255, 255, 0.1882352941);
+}
+.component-tag .feather {
+  fill: orange;
+}
+.component-tag a {
+  color: white;
+}
+.component-tag a:hover {
+  color: white;
 }
 
 /*# sourceMappingURL=dark.css.map */

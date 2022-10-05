@@ -1,9 +1,10 @@
 ﻿
 <div class="component-folder">
 	<Feather icon="folder" classes="main-icon" /><a href="/folders/@(folder.ID)/content">@folder.Name</a>
-	(<a class="edit-link" href="/folders/@(folder.ID)/edit"><Feather icon="edit"/></a> 
+	<span class="inline-block">(<a class="edit-link" href="/folders/@(folder.ID)/edit"><Feather icon="edit"/></a> 
 	<a class="move-link" href="/folders/@(folder.ID)/move"><Feather icon="move" /></a>
-	<a class ="delete-link" href="/folders/@(folder.ID)/deleteconfirmation"><Feather icon="x-square" /></a>)
+		<a class="delete-link" href="/folders/@(folder.ID)/deleteconfirmation"><Feather icon="x-square" /></a>)
+	</span>
 </div>
 
 

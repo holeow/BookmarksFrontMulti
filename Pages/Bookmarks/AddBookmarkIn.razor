@@ -4,6 +4,7 @@
 @inject IBookmarkService bookmark
 @inject NavigationManager navmanager
 @inject Auth Auth
+@implements IRefreshable
 
 <h3>Add Bookmark In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</h3>
 
@@ -11,24 +12,69 @@
 <EditForm Model="@model" OnValidSubmit="@Submit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
-	<div>
-		<label for="name">Name:</label>
-		<InputText id="name" @bind-Value="@model.name"/>
-	</div>
-	<div>
-		<label for="url">URL:</label>
-		<InputText id="url" @bind-Value="@model.Url" />
-	</div>
-	<div>
-		<label for="comment">Comment:</label>
-		<InputTextArea id="comment" @bind-Value="@model.Comment" />
-	</div>
-	<div>
-		<label for="imgurl">Image Url:</label>
-		<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
-	</div>
-	<input type="submit" value="Create Bookmark" />
+
+	<CascadingValue Value="this">
+		<ResponsiveTable>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="name">Name:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputText id="name" @bind-Value="@model.name" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="url">URL:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputText id="url" @bind-Value="@model.Url" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="comment">Comment:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputTextArea id="comment" @bind-Value="@model.Comment" class="fullwidth" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="imgurl">Image Url:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2">
+					<label for="tags">Tags (separated by ","):</label>
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2">
+					<InputTextArea id="tags" @bind-Value="@model.tags" class="fullwidth" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2" classes="flex-end">
+					<input type="submit" value="Create Bookmark" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+		</ResponsiveTable>
+	</CascadingValue>
 </EditForm>
+
+
 
 <p>@message</p>
 
@@ -42,16 +88,18 @@
 	public class bookmarkPostModel
 	{
 		[Required][StringLength(255)]
-		public string name{ get; set; }
+		public string? name{ get; set; }
 
 		[StringLength(255)]
-		public string Comment { get; set; }
+		public string? Comment { get; set; }
 
 		[Required][StringLength(1023)][Url]
-		public string Url { get; set; }
+		public string? Url { get; set; }
 
 		[StringLength(1023)][Url]
-		public string ImgUrl{ get; set; }
+		public string? ImgUrl{ get; set; }
+
+		public string? tags{ get; set; }
 	}
 
 	public async Task Submit(EditContext context)
@@ -73,6 +121,11 @@
 		}
 		else if (result.isSuccess)
 		{
+			var tagsInText = model.tags?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+			if(tagsInText!=null && tagsInText.Length>0){
+				var putresponse = await bookmark.PutBookmarkTags(result.content.ID, tagsInText.ToList());
+			}
+
 			navmanager.NavigateTo($"/folders/{folderID}/content");
 		}
 		else
@@ -87,5 +140,9 @@
 		{
 			return;
 		}
+	}
+
+	void IRefreshable.Refresh(){
+		StateHasChanged();
 	}
 }

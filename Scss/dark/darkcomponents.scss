@@ -43,3 +43,20 @@
         fill:gold;
     }
 }
+
+.component-tag {
+    
+    background-color: #FFFFFF30;
+
+    .feather {
+        fill: orange;
+    }
+
+    a {
+        color: white;
+
+        &:hover {
+            color: white;
+        }
+    }
+}
