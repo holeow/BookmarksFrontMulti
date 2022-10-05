@@ -1,6 +1,16 @@
-﻿* {
+﻿
+@font-face{
+    font-family: 'tourney';
+    src: url('/fonts/Tourney_wdth,wght.ttf');
+}
+@font-face {
+    font-family: 'rubik';
+    src: url('/fonts/Rubik_wght.ttf');
+}
+
+* {
     box-sizing: border-box;
-    
+   
 }
 svg{
     vertical-align : sub;
@@ -16,23 +26,21 @@ main {
 }
 
 .sidebar {
-   
-    
-
     width: 180px;
     min-width: 180px;
     height: calc((100vh - 3.5rem) - 1px );
     position: fixed;
     top: calc(3.5rem + 1px);
-    transition: left 1s;
+    transition: left 0.6s;
+    z-index: 500;
+    left: 0px;
 
     @media (min-width: 641px) {
-        position: relative;
+        position: sticky;
         top: 0;
     }
 
     .top-row {
-       
         border-bottom: 1px solid;
         justify-content: flex-start;
         height: 3.5rem;
@@ -41,9 +49,8 @@ main {
     }
 
     &.menu-collapse {
-        left: -250px;
-
-
+        transition: left 0.6s;
+        left: -180px;
         @media (min-width: 641px) {
             left: 0;
         }
@@ -64,9 +71,11 @@ main {
     z-index: 1;
 
     .navbar-brand {
-       
+        font-family: 'tourney', cursive;
+        font-size: 1.75rem;
         text-decoration: unset;
         margin-left: 10%;
+        font-variation-settings : "wght" 500, "wdth" 95;
     }
 
     .sidebar-toggler {
@@ -93,6 +102,7 @@ main {
     padding-left: 5%;
     padding-right: 5%;
     font-size: 1.25rem;
+    font-family: rubik, sans-serif;
 }
 
 #blazor-error-ui {
@@ -115,33 +125,34 @@ main {
 
 .nav-item {
 
-    &:first-child{
+    &:first-child {
         margin-top: 25px;
     }
 
-    font-size: 0.9rem;
     padding-bottom: 0.5rem;
-    display : flex;
-    justify-items : center;
-    align-items : center;
-    line-height : 1.5rem;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    line-height: 1.5rem;
+
 
     .nav-link {
         display: block;
         width: 95%;
         margin-left: 2.5%;
         box-sizing: border-box;
-        text-decoration : none;
-        font-size : 1.25rem;
-        font-weight : 600;
-        padding-top : 8px;
+        text-decoration: none;
+        font-family: sansitaswashed;
+        font-size: 1.25rem;
+        font-weight: 600;
+        padding-top: 8px;
         padding-bottom: 8px;
 
 
-        .navmarginleft{
-            margin-left:15px;
+        .navmarginleft {
+            margin-left: 15px;
         }
-        
+
 
         &.active {
             border-radius: 5px;
@@ -154,4 +165,6 @@ main {
 .feather{
     height:1.5rem;
     width:1.5rem;
+    position:relative;
+    top: 0.07rem;
 }
