@@ -6,6 +6,7 @@
   "background_color": "#ffffff",
   "theme_color": "#03173d",
   "prefer_related_applications": false,
+  "scope": "https://bookmarks.hlw.ninja/",
   "icons": [
     {
       "src": "icon-512.png",
