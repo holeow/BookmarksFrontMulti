@@ -5,12 +5,12 @@
 *@
 
 @if(!mobile){
-	<table class="@classes">
+	<table class="@classes @mobileclass component-responsivetable">
 		@ChildContent
 	</table>
 }
 else{
-	<table class="@classes">
+	<table class="@classes @mobileclass component-responsivetable">
 		@ChildContent
 	</table>
 }
@@ -24,6 +24,7 @@ else{
 	public IRefreshable? refreshable{ get; set; }
 	float width { get; set; }
 	bool mobile{ get; set; }
+	string? mobileclass => mobile ? "mobile" : "desktop";
 	protected override async Task OnInitializedAsync()
 	{
 		Console.WriteLine("hello!");

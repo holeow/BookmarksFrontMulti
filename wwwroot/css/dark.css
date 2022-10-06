@@ -16,6 +16,14 @@
   font-size: 1rem;
   font-family: rubik, sans-serif;
   word-break: break-word;
+  width: 100%;
+}
+@media (min-width: 641px) {
+  .content {
+    position: relative;
+    left: 180px;
+    width: calc(100% - 180px);
+  }
 }
 
 svg {
@@ -37,16 +45,10 @@ main {
   min-width: 180px;
   height: calc(100vh - 3.5rem - 1px);
   position: fixed;
-  top: calc(3.5rem + 1px);
+  top: 3.5rem;
   transition: left 0.6s;
   z-index: 500;
   left: 0px;
-}
-@media (min-width: 641px) {
-  .sidebar {
-    position: sticky;
-    top: 0;
-  }
 }
 .sidebar .top-row {
   border-bottom: 1px solid;
@@ -67,6 +69,7 @@ main {
 
 .middlepage {
   display: flex;
+  width: 100vw;
 }
 
 .top-row {
@@ -251,6 +254,15 @@ h3 .feather {
 .component-tag a {
   text-decoration: none;
   font-size: 1rem;
+}
+
+.component-responsivetable {
+  margin: 0px auto;
+}
+@media (min-width: 641px) {
+  .component-responsivetable {
+    margin: unset;
+  }
 }
 
 .fullwidth {

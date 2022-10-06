@@ -28,3 +28,12 @@
         font-size:1rem;
     }
 }
+
+.component-responsivetable {
+
+    margin : 0px  auto;
+    
+    @media (min-width: 641px) {
+        margin: unset;
+    }
+}
