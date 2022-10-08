@@ -1,0 +1,39 @@
+﻿
+.component-folder {
+    svg {
+        height: 1.5rem;
+        width: 1.5rem;
+    }
+}
+
+.component-bookmark {
+    svg {
+        height: 1.5rem;
+        width: 1.5rem;
+    }
+}
+
+.component-tag{
+    padding:0px 2px 0px 2px;
+    margin: 2px;
+    display: inline-block;
+    cursor:pointer;
+    border-radius: 4px;
+    .feather{
+        height:1rem;
+        width:1rem;
+    }
+    a{
+        text-decoration:none;
+        font-size:1rem;
+    }
+}
+
+.component-responsivetable {
+
+    margin : 0px  auto;
+    
+    @media (min-width: 641px) {
+        margin: unset;
+    }
+}

@@ -1,11 +1,13 @@
 ﻿//ABOUT About this project.
 
+//!! When releasing change cachename from
+// link:wwwroot/service-worker.published.js:"cache"
 
 //## Services used
 //see uses a cookie service found on SO : link:"Classes/Services/Cookie.cs" 
 //see uses a custom service to handle API key : link:"Classes/Services/CheckKey.cs"
 //see uses a custom service to call the API: link:"Classes/Services/BookmarkService.cs"
-//todo add a TEMPDATA service blazor
+
 
 
 

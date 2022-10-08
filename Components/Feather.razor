@@ -1,8 +1,6 @@
 ﻿
 
-<svg
-	width="@width"
-	height="@height"
+<svg class="feather @classes"
 	fill="@fill"
 	stroke="@stroke"
 	stroke-width="@strokeWidth"
@@ -29,7 +27,8 @@
 	public string strokeLinecap { get; set; } = "round";
 	[Parameter]
 	public string strokeLinejoin { get; set; } = "round";
-
+	[Parameter]
+	public string? classes {get;set;}
 
 
 }

@@ -1,0 +1,46 @@
+﻿@implements IDisposable
+
+@if (!mobile)
+{
+	<tr class="@classes">
+		@ChildContent
+	</tr>
+}
+else
+{
+		@ChildContent
+}
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+	[Parameter]
+	public string? classes { get; set; }
+	float width { get; set; }
+	public bool mobile { get; set; }
+	protected override async Task OnInitializedAsync()
+	{
+		WindowSize.WindowSizeChanged += OnWindowResize;
+		width = await WindowSize.GetWidth();
+		if (width < 641 && !mobile)
+		{
+			mobile = true;
+			StateHasChanged();
+		}
+		if (width >= 641 && mobile)
+		{
+			mobile = false;
+			StateHasChanged();
+		}
+	}
+
+	public void OnWindowResize(float width, float height)
+	{
+		this.width = width;
+	}
+
+	void IDisposable.Dispose()
+	{
+		WindowSize.WindowSizeChanged -= OnWindowResize;
+	}
+}

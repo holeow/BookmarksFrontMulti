@@ -1,0 +1,417 @@
+@font-face {
+  font-family: "tourney";
+  src: url("/fonts/Tourney_wdth,wght.ttf");
+}
+@font-face {
+  font-family: "rubik";
+  src: url("/fonts/Rubik_wght.ttf");
+}
+* {
+  box-sizing: border-box;
+}
+
+.content {
+  padding-left: 5%;
+  padding-right: 5%;
+  font-size: 1rem;
+  font-family: rubik, sans-serif;
+  word-break: break-word;
+  width: 100%;
+}
+@media (min-width: 641px) {
+  .content {
+    position: relative;
+    left: 180px;
+    width: calc(100% - 180px);
+  }
+}
+
+main {
+  min-height: 100vh;
+}
+
+svg {
+  vertical-align: sub;
+}
+
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+main {
+  flex: 1;
+}
+
+.sidebar {
+  width: 180px;
+  min-width: 180px;
+  height: calc(100vh - 3.5rem - 1px);
+  position: fixed;
+  top: 3.5rem;
+  transition: left 0.6s;
+  z-index: 500;
+  left: 0px;
+}
+.sidebar .top-row {
+  border-bottom: 1px solid;
+  justify-content: flex-start;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+.sidebar.menu-collapse {
+  transition: left 0.6s;
+  left: -180px;
+}
+@media (min-width: 641px) {
+  .sidebar.menu-collapse {
+    left: 0;
+  }
+}
+
+.middlepage {
+  display: flex;
+  width: 100vw;
+}
+
+.top-row {
+  justify-content: space-between;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.top-row .navbar-brand {
+  font-family: "tourney", cursive;
+  font-size: 1.75rem;
+  text-decoration: unset;
+  margin-left: 10%;
+  font-variation-settings: "wght" 500, "wdth" 95;
+}
+.top-row .sidebar-toggler {
+  all: unset;
+  cursor: pointer;
+  margin-right: 7px;
+  border-radius: 5px;
+  border-style: double;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-items: flex-end;
+  align-items: center;
+}
+@media (min-width: 641px) {
+  .top-row .sidebar-toggler {
+    display: none;
+  }
+}
+
+#blazor-error-ui {
+  bottom: 0;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  display: none;
+  left: 0;
+  padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+  cursor: pointer;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+}
+
+.nav-item {
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  line-height: 1.5rem;
+}
+.nav-item:first-child {
+  margin-top: 25px;
+}
+.nav-item .nav-link {
+  display: block;
+  width: 95%;
+  margin-left: 2.5%;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: sansitaswashed;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.nav-item .nav-link .navmarginleft {
+  margin-left: 15px;
+}
+.nav-item .nav-link.active {
+  border-radius: 5px;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.feather {
+  height: 1.5rem;
+  width: 1.5rem;
+  position: relative;
+  top: 0.07rem;
+}
+
+button {
+  all: unset;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+input {
+  all: unset;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  padding-left: 2px;
+}
+input[type=submit] {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+a {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@font-face {
+  font-family: "sansitaswashed";
+  src: url("/fonts/SansitaSwashed_wght.ttf");
+}
+h1, h2, h3, h4, h5, h6 {
+  all: unset;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: sansitaswashed, cursive;
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+h1 .feather {
+  height: 2.25rem;
+  width: 2.25rem;
+  stroke-width: 0.1875rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+h2 .feather {
+  height: 2rem;
+  width: 2rem;
+  stroke-width: 0.1875rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+h3 .feather {
+  height: 1.75rem;
+  width: 1.75rem;
+  stroke-width: 0.1875rem;
+}
+
+.component-folder svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.component-bookmark svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.component-tag {
+  padding: 0px 2px 0px 2px;
+  margin: 2px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.component-tag .feather {
+  height: 1rem;
+  width: 1rem;
+}
+.component-tag a {
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.component-responsivetable {
+  margin: 0px auto;
+}
+@media (min-width: 641px) {
+  .component-responsivetable {
+    margin: unset;
+  }
+}
+
+.fullwidth {
+  width: 100%;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+body {
+  background-color: #2d2d2d;
+  color: #aaaaaa;
+}
+
+.sidebar {
+  background-color: #101010;
+  /*   .top-row {
+         background-color: #101010;
+         border-bottom-color: #222222;
+     }*/
+}
+
+.middlepage {
+  display: flex;
+}
+
+.top-row {
+  background-color: #101010;
+  border-bottom: #222222;
+}
+.top-row .navbar-brand {
+  color: white;
+}
+.top-row .sidebar-toggler {
+  border-color: #cccccc;
+}
+.top-row .sidebar-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.1882352941);
+}
+
+#blazor-error-ui {
+  background: black;
+}
+
+.nav-link {
+  color: white;
+}
+.nav-link:hover {
+  color: #CCCCFF;
+}
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.3137254902);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+button {
+  color: white;
+  background-color: #111111;
+  border-color: grey;
+}
+button:hover {
+  background-color: #333333;
+}
+
+input, textarea {
+  background-color: #111111;
+  color: white;
+  border-color: grey;
+}
+input:autofill, textarea:autofill {
+  background-color: #111111;
+  color: white;
+  border-color: grey;
+}
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, textarea:-webkit-autofill:active {
+  transition: all 0s 50000s;
+}
+input[type=submit]:hover, textarea[type=submit]:hover {
+  background-color: #333333;
+}
+
+a {
+  color: #6496ff;
+}
+a:hover {
+  color: #3264ff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #eeeeee;
+}
+h1 .main-icon, h2 .main-icon, h3 .main-icon, h4 .main-icon, h5 .main-icon, h6 .main-icon {
+  fill: #0000FF;
+}
+
+.component-folder .main-icon {
+  fill: gold;
+}
+.component-folder .delete-link {
+  color: red;
+}
+.component-folder .delete-link:hover {
+  color: darkred;
+}
+
+.component-bookmark .main-icon {
+  fill: green;
+}
+.component-bookmark .delete-link {
+  color: red;
+}
+.component-bookmark .delete-link:hover {
+  color: darkred;
+}
+
+.component-move .main-folder {
+  fill: blue;
+}
+.component-move .forbidden-folder {
+  fill: red;
+}
+.component-move .forbidden-move-link {
+  stroke: red;
+}
+.component-move .folder {
+  fill: gold;
+}
+
+.component-tag {
+  background-color: rgba(255, 255, 255, 0.1882352941);
+}
+.component-tag .feather {
+  fill: orange;
+}
+.component-tag a {
+  color: white;
+}
+.component-tag a:hover {
+  color: white;
+}
+
+/*# sourceMappingURL=dark.css.map */

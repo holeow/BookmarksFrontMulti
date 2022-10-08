@@ -21,8 +21,7 @@
 {
 	@foreach (var tag in UsedTags)
 	{
-		<Tag fill="orange" tag="@tag" OnClick="() => Remove(tag)" />
-		//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
+		<Tag tag="@tag" OnClick="() => Remove(tag)" />
 	}
 }
 <h3>Tags available</h3>
@@ -32,7 +31,7 @@
 	@foreach (var tag in AvailableTags.OrderBy(a=> a))
 	{
 				
-		<Tag fill="orange" tag="@tag" OnClick="() => Add(tag)"/>
+		<Tag tag="@tag" OnClick="() => Add(tag)"/>
 		//<span class="tag"><Feather icon="tag" fill="orange" /><a href="/tags/search/@tag">[&ensp;@tag&ensp;]</a></span>
 	}
 }

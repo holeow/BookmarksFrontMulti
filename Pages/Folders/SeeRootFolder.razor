@@ -14,26 +14,26 @@
 	}
 	else if (response.isSuccess)
 	{
-
+		
 		<h3>
-			<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+			<Feather icon="folder" classes="main-icon"/>
 			@if (current.Container == null)
 			{
 				@current.Name
 			}
 			else
 			{
-				<span>@current.Name (<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</span>
+			@current.Name <span class="inline-block">(<a href="/folders/@(current.Container)/content"><Feather icon="corner-up-left" /></a>)</span>
 			}
 		</h3>
 		<hr />
-		<h3><Feather icon="folder" height="32" width="32" /> Folders (<a href="/folders/@(current.ID)/folders/add"><Feather icon="folder-plus" height="32" width="32" stroke="blue" /></a>)</h3>
+		<h3><Feather icon="folder" /> Folders (<a href="/folders/@(current.ID)/folders/add"><Feather icon="folder-plus"/></a>)</h3>
 		@foreach (Classes.Folder f in response.content.children)
 		{
 			<Folder fillColor="yellow" folder="f" />
 		}
 		<hr />
-		<h3><Feather icon="bookmark" height="32" width="32" />Bookmarks (<a href="/folders/@(current.ID)/bookmarks/add"><Feather icon="plus-square" height="32" width="32" stroke="blue" /></a>)</h3>
+		<h3><Feather icon="bookmark"/>Bookmarks (<a href="/folders/@(current.ID)/bookmarks/add"><Feather icon="plus-square" /></a>)</h3>
 		@foreach (Classes.Bookmark b in response.content.bookmarks)
 		{
 			<Bookmark fillColor="green" bookmark="b" />

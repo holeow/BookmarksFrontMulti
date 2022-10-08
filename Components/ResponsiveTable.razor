@@ -1,0 +1,56 @@
+﻿@implements IDisposable
+
+@*//! Parent must implement IRefreshable and set StateHasChanged, 
+	and must give itself as a cascadingParameter.
+*@
+
+@if(!mobile){
+	<table class="@classes @mobileclass component-responsivetable">
+		@ChildContent
+	</table>
+}
+else{
+	<table class="@classes @mobileclass component-responsivetable">
+		@ChildContent
+	</table>
+}
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+	[Parameter]
+	public string ? classes { get; set; }
+	[CascadingParameter]
+	public IRefreshable? refreshable{ get; set; }
+	float width { get; set; }
+	bool mobile{ get; set; }
+	string? mobileclass => mobile ? "mobile" : "desktop";
+	protected override async Task OnInitializedAsync()
+	{
+		Console.WriteLine("hello!");
+		WindowSize.WindowSizeChanged += OnWindowResize;
+		width = await WindowSize.GetWidth();
+		mobile = width < 641;
+		
+	}
+
+	public void OnWindowResize(float width, float height){
+		this.width = width;
+		if (width < 641 && !mobile)
+		{
+			mobile = true;
+			refreshable?.Refresh();
+			
+		}
+		if (width >= 641 && mobile)
+		{
+			mobile = false;
+			refreshable?.Refresh();
+			
+		}
+	}
+
+	void IDisposable.Dispose(){
+		WindowSize.WindowSizeChanged -= OnWindowResize;
+	}
+}

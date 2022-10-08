@@ -17,34 +17,34 @@ else
 {
 	@if (currentFolder.content.Container == null)
 	{
-		<h3>Impossible(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</h3>
+		<h3>Impossible<span class="inline-block">(<a href="/folders/@(currentFolder.content.ID)/content"><Feather icon="corner-up-left"/></a>)</span></h3>
 		<p style="color: red;">Impossible to move root folder.</p>
 	}
 	else
 	{
-		<h3>Move folder : @currentFolder.content.Name (<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+		<h3>Move folder : @currentFolder.content.Name <span class="inline-block">(<a href="/folders/@(currentFolder.content.Container)/content"><Feather icon="corner-up-left" /></a>)</span></h3>
 		@if (currentContainer == null)
 		{
 			<p>Loading, please wait...</p>
 		}
 		else
 		{
-
+			<div class="component-move">
 			@if (currentContainer.content.current.Container == null)
 			{
 				<h3>
-					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
-					@(currentContainer.content.current.Name) (<a @onclick="() => Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>)
+					<Feather icon="folder" classes="main-folder"  />
+					@(currentContainer.content.current.Name) (<a @onclick="() => Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" classes="big-move-link" /></a>)
 				</h3>
 			}
 			else
 			{
 				<h3>
-					<Feather icon="folder" fill="#4040FF" height="32" width="32" />
+					<Feather icon="folder" classes="main-folder" height="32" width="32" />
 					@currentContainer.content.current.Name
 					(
-					<a @onclick="()=> Navigate(currentContainer.content.current.Container.Value)"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>
-					<a @onclick="()=> Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle" stroke="blue" height="32" width="32" /></a>
+					<a @onclick="()=> Navigate(currentContainer.content.current.Container.Value)"><Feather icon="corner-up-left"   /></a>
+					<a @onclick="()=> Place(currentContainer.content.current.ID)"><Feather icon="arrow-down-circle"  classes="big-move-link" /></a>
 					)
 				</h3>
 			}
@@ -54,19 +54,20 @@ else
 				@if (item.ID == currentFolder.content.ID)
 				{
 					<div>
-						<Feather icon="folder" fill="red" /><a>@item.Name</a>
-						(<a><Feather stroke="red" icon="arrow-down-circle" /></a>)
+						<Feather icon="folder" classes="forbidden-folder" /><a>@item.Name</a>
+						(<a><Feather icon="arrow-down-circle" classes="forbidden-move-link"/></a>)
 					</div>
 				}
 				else
 				{
 					<div>
-						<Feather icon="folder" fill="yellow" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
-						(<a @onclick="() => Place(item.ID)"><Feather stroke="blue" icon="arrow-down-circle" /></a>)
+						<Feather icon="folder" classes="folder" /><a @onclick="()=> Navigate(item.ID)">@item.Name</a>
+						(<a @onclick="() => Place(item.ID)"><Feather  icon="arrow-down-circle" classes="move-link" /></a>)
 					</div>
 				}
 
 			}
+			</div>
 		}
 	}
 

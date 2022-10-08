@@ -3,22 +3,60 @@
 @inject Auth Auth
 @inject IBookmarkService bookmark
 @inject NavigationManager navmanager
+@implements IRefreshable
 
-<h3>Add Folder In Folder n°@folderID (<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+<h3>Add Folder In Folder n°@folderID <span class="inline-block">(<a href="/folders/@(folderID)/content"><Feather icon="corner-up-left"  width="32" height="32" /></a>)</span></h3>
 
 <EditForm Model="@model" OnValidSubmit="@Submit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
-	<div>
-		<label for="name">Name:</label>
-		<InputText id="name" @bind-Value="@model.name"/>
-	</div>
-	<div>
-		<label for="imgurl">Image Url:</label>
-		<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
-	</div>
-	<input type="submit" value="Create Folder" />
+	<CascadingValue Value="this">
+		<ResponsiveTable>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="name">Name:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputText id="name" @bind-Value="@model.name" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd>
+					<label for="imgurl">Image Url:</label>
+				</ResponsiveTd>
+				<ResponsiveTd>
+					<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2">
+					<label for="tags">Tags (separated by ","):</label>
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2">
+					<InputTextArea id="tags" @bind-Value="@model.tags" class="fullwidth" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+			<ResponsiveTr>
+				<ResponsiveTd colspan="2" classes="flex-end">
+					<input type="submit" value="Create Folder" />
+				</ResponsiveTd>
+			</ResponsiveTr>
+
+		</ResponsiveTable>
+	</CascadingValue>
+
+
 </EditForm>
+
+
+
 
 @code {
 	[Parameter]
@@ -29,15 +67,17 @@
 	public class postFolderModel
 	{
 		[Required][StringLength(255,ErrorMessage = "Name is too long")]
-		public string name { get; set; }
+		public string? name { get; set; }
 		[Url(ErrorMessage =" Image url Must be a valid URL")]
-		public string ImgUrl { get; set; }
+		public string? ImgUrl { get; set; }
+		public string? tags { get; set; }
+
 	}
 
 
 	public async Task Submit(EditContext context)
 	{
-		Classes.Folder folder = new Classes.Folder() {Container = folderID, Name = model.name, ImgUrl = string.IsNullOrWhiteSpace(model.ImgUrl) ? null : model.ImgUrl};
+		Classes.Folder folder = new Classes.Folder() {Container = folderID, Name = model.name ?? "empty", ImgUrl = string.IsNullOrWhiteSpace(model.ImgUrl) ? null : model.ImgUrl};
 		var result = await bookmark.PostFolder( folder);
 
 		if (result.httpcode == 401)
@@ -47,6 +87,13 @@
 		}
 		else
 		{
+			if(result.isSuccess){
+				var tagsInText = model.tags?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+				if (tagsInText != null && tagsInText.Length > 0)
+				{
+					var putresponse = await bookmark.PutFolderTags(result.content?.ID ?? 0, tagsInText.ToList());
+				}
+			}
 			navmanager.NavigateTo($"/folders/{folderID}/content");
 		}
 	}
@@ -56,6 +103,8 @@
 		if (await Auth.ConnectionRequired()) return;
 	}
 
-
+	void IRefreshable.Refresh(){
+		StateHasChanged();
+	}
 
 }

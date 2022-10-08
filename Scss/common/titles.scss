@@ -1,0 +1,43 @@
+﻿
+@font-face {
+    font-family: 'sansitaswashed';
+    src: url('/fonts/SansitaSwashed_wght.ttf');
+}
+
+h1, h2, h3, h4, h5, h6 {
+   all:unset;
+   display : block;
+   margin-bottom: 0.5rem;
+
+   font-family: sansitaswashed, cursive
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+
+    .feather {
+        height: 2.25rem;
+        width: 2.25rem;
+        stroke-width: 0.1875rem;
+    }
+}
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    .feather {
+        height: 2rem;
+        width: 2rem;
+        stroke-width: 0.1875rem;
+    }
+}
+h3 {
+    font-size: 1.75rem;
+    font-weight: 400;
+
+    .feather {
+        height: 1.75rem;
+        width: 1.75rem;
+        stroke-width: 0.1875rem;
+    }
+}

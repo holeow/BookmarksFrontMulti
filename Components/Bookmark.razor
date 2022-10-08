@@ -1,10 +1,11 @@
 ﻿
-<div>
-	<Feather icon="bookmark" fill="@fillColor" /><a href="/bookmarks/@(bookmark.ID)">@bookmark.Name</a>
-	(<a href="@(bookmark.URL)" target="_blank"><Feather icon="external-link" stroke="blue" width="28" height="28"/></a>
-	<a href="/bookmarks/@(bookmark.ID)/edit"><Feather stroke="blue" icon="edit" /></a>
-	<a href="/bookmarks/@(bookmark.ID)/move"><Feather stroke="blue" icon="move" /></a>
-	<a href="/bookmarks/@(bookmark.ID)/deleteconfirmation"><Feather stroke="red" icon="x-square" /></a>)
+<div class="component-bookmark">
+	<Feather icon="bookmark" classes="main-icon" /><a href="/bookmarks/@(bookmark.ID)">@bookmark.Name</a>
+	<span class="inline-block">(<a class="external-link" href="@(bookmark.URL)" target="_blank"><Feather icon="external-link" width="28" height="28"/></a>
+	<a class="edit-link" href="/bookmarks/@(bookmark.ID)/edit"><Feather  icon="edit" /></a>
+	<a class="move-link" href="/bookmarks/@(bookmark.ID)/move"><Feather  icon="move" /></a>
+		<a class="delete-link" href="/bookmarks/@(bookmark.ID)/deleteconfirmation"><Feather icon="x-square" /></a>)
+	</span>
 </div>
 
 @code {

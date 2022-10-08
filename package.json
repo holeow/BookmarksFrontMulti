@@ -1,0 +1,24 @@
+{
+  "name": "bookmarksfront",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass:dark": "npx sass ./Scss/dark.scss ./wwwroot/css/dark.css --watch",
+    "sass:light": "npx sass ./Scss/light.scss ./wwwroot/css/light.css --watch"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holeow/BookmarksFront.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/holeow/BookmarksFront/issues"
+  },
+  "homepage": "https://github.com/holeow/BookmarksFront#readme",
+  "devDependencies": {
+    "sass": "^1.55.0"
+  }
+}

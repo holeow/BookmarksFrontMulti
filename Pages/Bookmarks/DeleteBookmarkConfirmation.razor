@@ -33,7 +33,7 @@ else if (!response.isSuccess)
 }
 else
 {
-	<h3>Delete bookmark : @response.content.Name (<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32" /></a>)</h3>
+	<h3>Delete bookmark : @response.content.Name <span class="inline-block">(<a href="/folders/@(response.content.Folder)/content"><Feather icon="corner-up-left" width="32" height="32" /></a>)</span></h3>
 	<p>Are you sure of wanting to delete this bookmark?</p>
 	<EditForm Model="@response" OnValidSubmit="@Confirm">
 		<input type="submit" value="Confirm" style="background-color : red;">

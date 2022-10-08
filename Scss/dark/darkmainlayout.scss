@@ -1,0 +1,57 @@
+﻿body {
+    background-color: #2d2d2d;
+    color: #aaaaaa;
+}
+
+
+
+.sidebar {
+    background-color: #101010;
+
+
+ /*   .top-row {
+        background-color: #101010;
+        border-bottom-color: #222222;
+    }*/
+}
+
+.middlepage {
+    display: flex;
+}
+
+.top-row {
+    background-color: #101010;
+    border-bottom: #222222;
+
+
+
+    .navbar-brand {
+        color: white;
+    }
+
+    .sidebar-toggler {
+        border-color: #cccccc;
+
+
+        &:hover {
+            background-color: #FFFFFF30
+        }
+    }
+}
+
+#blazor-error-ui {
+    background: black;
+}
+
+.nav-link {
+    color : white;
+
+    &:hover{
+        color: #CCCCFF;
+    }
+
+    &.active {
+        background-color: #FFFFFF50;
+        border-color : #FFFFFF99;
+    }
+}

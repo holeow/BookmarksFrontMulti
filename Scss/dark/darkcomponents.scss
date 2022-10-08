@@ -1,0 +1,62 @@
+﻿
+.component-folder {
+    
+    .main-icon{
+        fill:gold;
+        
+    }
+
+    .delete-link {
+        color: red;
+
+        &:hover {
+            color: darkred;
+        }
+    }
+}
+.component-bookmark {
+
+    .main-icon{
+        fill:green;
+    }
+
+    .delete-link {
+        color: red;
+
+        &:hover {
+            color: darkred;
+        }
+    }
+}
+
+.component-move {
+    .main-folder{
+        fill:blue;
+    }
+    .forbidden-folder{
+        fill:red;
+    }
+    .forbidden-move-link{
+        stroke:red;
+    }
+    .folder{
+        fill:gold;
+    }
+}
+
+.component-tag {
+    
+    background-color: #FFFFFF30;
+
+    .feather {
+        fill: orange;
+    }
+
+    a {
+        color: white;
+
+        &:hover {
+            color: white;
+        }
+    }
+}

@@ -8,6 +8,7 @@
 @inject IBookmarkService BookmarkService
 @inject TempData tempdata
 @inject NavigationManager manager
+@implements IRefreshable
 
 
 
@@ -27,11 +28,23 @@
 			<li>Save your key somewhere safe, we will give you each key only once then hide it.</li>
 			<li>Don't share your key to anyone else. Someone with your key can access and modify all your data!</li>
 		</ul></p>
-	<EditForm Model="@keyModel" OnValidSubmit="@Submit">
-		<label for="key">key</label>
-		<InputText @bind-Value="keyModel.key" id="key"></InputText>
-		<input type="submit" class="btn btn-primary" value="Save"/>
-	</EditForm>
+
+		<EditForm Model="@keyModel" OnValidSubmit="@Submit">
+			<CascadingValue Value="this">
+				<ResponsiveTable>
+					<ResponsiveTr>
+						<ResponsiveTd><label for="key">key</label></ResponsiveTd>
+						<ResponsiveTd><InputText @bind-Value="keyModel.key" id="key"></InputText></ResponsiveTd>
+					</ResponsiveTr>
+					<ResponsiveTr>
+						
+						<ResponsiveTd classes="flex-end" colspan="2"><input type="submit" class="btn btn-primary" value="Save" /></ResponsiveTd>
+					</ResponsiveTr>
+				</ResponsiveTable>
+		</CascadingValue>
+		</EditForm>
+	
+
 	<p>@message</p>
 }
 else
@@ -43,18 +56,25 @@ else
 	<p>
 		Go to <a href="https://apibookmarks.hlw.ninja/auth/signup" target="_blank" rel="noopener noreferrer"><Feather icon="link" />The api website</a> and register.
 	</p>
-
 	<EditForm Model="@accountModel" OnValidSubmit="@SubmitAccount">
-		<div>
-			<label for="username">username</label>
-			<InputText @bind-Value="accountModel.username" id="username"></InputText>
-		</div>
-		<div>
-			<label for="password">password</label>
-			<InputText type="password" @bind-Value="accountModel.password" id="password"></InputText >
-		</div>
-		<input type="submit" class="btn btn-primary" value="Login"/>
+		<CascadingValue Value="this">
+			<ResponsiveTable>
+				<ResponsiveTr>
+					<ResponsiveTd><label for="username">username:</label></ResponsiveTd>
+					<ResponsiveTd><InputText @bind-Value="accountModel.username" id="username"></InputText></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd><label for="password">password:</label></ResponsiveTd>
+					<ResponsiveTd><InputText type="password" @bind-Value="accountModel.password" id="password"></InputText></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd classes="flex-end" colspan="2"><input type="submit" class="btn btn-primary" value="Login" /></ResponsiveTd>
+				</ResponsiveTr>
+			</ResponsiveTable>
+		</CascadingValue>
 	</EditForm>
+
+	
 	<p>@message</p>
 }
 	
@@ -125,5 +145,9 @@ else
 		await Auth.SetChoice(isKeyAuthChosen ? "APITOKEN" : "APIKEY");
 		auth = await Auth.GetAuth();
 		isKeyAuthChosen = auth.type == "APIKEY";
+	}
+
+	void IRefreshable.Refresh(){
+		StateHasChanged();
 	}
 }

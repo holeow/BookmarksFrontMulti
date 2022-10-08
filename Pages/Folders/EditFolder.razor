@@ -6,6 +6,7 @@
 @using BookmarksFront.Classes
 @using System.ComponentModel.DataAnnotations
 @inject TempData tempdata
+@implements IRefreshable
 
 
 @if (response == null)
@@ -35,28 +36,35 @@ else if (!response.isSuccess)
 }
 else
 {
-	<h3>Edit Folder @response.content.Name (<a href="/folders/@(response.content.Container)/content"><Feather icon="corner-up-left" stroke="blue" width="32" height="32"/></a>)</h3>
-
+	<h3>Edit Folder @response.content.Name <span class="inline-block">(<a href="/folders/@(response.content.Container)/content"><Feather icon="corner-up-left" /></a>)</span></h3>
 	<EditForm Model="@model" OnValidSubmit="@Submit">
 		<DataAnnotationsValidator />
 		<ValidationSummary />
-		
-		<div>
-			<label for="name">Name:</label>
-			<InputText id="name" @bind-Value="@model.name"/>
-		</div>
-		<div>
-			<label for="imgurl">Image Url:</label>
-			<InputText id="imgurl" @bind-Value="@model.ImgUrl" />
-		</div>
-		<div>
-			<label for="tags">Tags (separated with ","):</label>
-		</div><div>
-			<InputTextArea id="tags" @bind-Value="@model.tags" />
-		</div>
-		<input type="submit" value="Save" />
-
+		<CascadingValue Value="this">
+			<ResponsiveTable>
+				<ResponsiveTr>
+					<ResponsiveTd><label for="name">Name:</label></ResponsiveTd>
+					<ResponsiveTd><InputText id="name" @bind-Value="@model.name" /></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd><label for="imgurl">Image Url:</label></ResponsiveTd>
+					<ResponsiveTd><InputText id="imgurl" @bind-Value="@model.ImgUrl" /></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2"><label for="tags">Tags (separated with ","):</label></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2"><InputTextArea id="tags" @bind-Value="@model.tags" class="fullwidth" /></ResponsiveTd>
+				</ResponsiveTr>
+				<ResponsiveTr>
+					<ResponsiveTd colspan="2" classes="flex-end"><input type="submit" value="Save" /></ResponsiveTd>
+				</ResponsiveTr>
+			</ResponsiveTable>
+		</CascadingValue>
 	</EditForm>
+
+
+	
 }
 <p>@errormessage</p>
 
@@ -140,5 +148,9 @@ else
 
 			}
 		}
+	}
+
+	void IRefreshable.Refresh(){
+		StateHasChanged();
 	}
 }

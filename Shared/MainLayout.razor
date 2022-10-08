@@ -1,17 +1,123 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager manager
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
+	@*//! need preventDefault ontouchMove or touchEnd doesn't work*@
+	<main @ontouchstart=touchStart @ontouchend=touchEnd @ontouchmove=touchMove @ontouchmove:preventDefault >
+	    <div class="top-row px-4">
+		    <div class="top-row ps-3 navbar navbar-dark">
+			    <div class="container-fluid">
+				    <a class="navbar-brand" href="">Bookmarks.hlw.ninja</a>
+			    </div>
+		    </div>
+		    <button class="sidebar-toggler" @onclick="menuButtonClick"><Feather icon="menu"/></button>
+	    </div>
+	    <div class="middlepage">
+	    <NavMenu Collapse="collapseMenu" @ref="menu" />
+	    
+	    <article class="content px-4">
+		    @Body
+	    </article>
+	    
+	    </div>
     </main>
 </div>
+
+@code{
+
+	private NavMenu? menu;
+	public string message;
+
+	public double lastX;
+	public double baseX;
+
+
+	public double diffX => lastX - baseX;
+
+
+	public DateTime time;
+	public bool called = false;
+
+	public bool collapseMenu { get; set; } = true;
+	public async Task menuButtonClick()
+	{
+
+		collapseMenu = !collapseMenu;
+		StateHasChanged();
+
+
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		manager.LocationChanged += OnLocationChange;
+	}
+
+	void IDisposable.Dispose()
+	{
+		manager.LocationChanged -= OnLocationChange;
+	}
+
+	public void OnLocationChange(object? lala, LocationChangedEventArgs args)
+	{
+		collapseMenu = true;
+		StateHasChanged();
+	}
+
+
+	public async Task touchStart(TouchEventArgs args)
+	{
+
+		baseX = args.Touches[0].ClientX;
+		lastX = args.Touches[0].ClientX;
+
+		time = DateTime.Now;
+		called = false;
+	}
+
+	public async Task touchEnd(TouchEventArgs args)
+	{
+
+
+
+	}
+
+	public async Task touchMove(TouchEventArgs args)
+	{
+
+		var diff = DateTime.Now - time;
+
+
+		lastX = args.Touches[0].ClientX;
+		if (!called && diff.TotalMilliseconds < 700)
+		{
+			if (diffX > 90 && diff.TotalMilliseconds <250)
+			{
+				called = true;
+				collapseMenu = false;
+				return;
+			}
+			if (diffX > 225 && diff.TotalMilliseconds < 700)
+			{
+				called = true;
+				collapseMenu = false;
+				return;
+			}
+
+			if (diffX <-90 && diff.TotalMilliseconds < 250)
+			{
+				called = true;
+				collapseMenu = true;
+				return;
+			}
+			if (diffX<-225 && diff.TotalMilliseconds < 700)
+			{
+				called = true;
+				collapseMenu = true;
+				return;
+			}
+		}
+	}
+}

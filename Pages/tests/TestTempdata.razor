@@ -1,19 +1,31 @@
 ﻿@page "/temp1"
 @inject TempData tempdata
 
-<h3>value : @value</h3>
-
-<A href="/temp2" test="@("test")" beforeClick="@test" disallowAuxClick=false>temp2</A>
+<ResponsiveTable>
+	<p>hello!</p>
+</ResponsiveTable>
 
 @code {
 	string value;
+	float height, width;
 	protected override async Task OnInitializedAsync()
 	{
-
+		height = await WindowSize.GetHeight();
+		width = await WindowSize.GetWidth();
+		WindowSize.WindowSizeChanged += wsc;
 		value = tempdata["test"] as string;
+
 	}
 
 	public async Task test(){
 		tempdata["hello"] = "hi";
+	}
+	
+
+	public async void wsc(float width, float height)
+	{
+		this.height = height;
+		this.width = width;
+		StateHasChanged();
 	}
 }
