@@ -27,6 +27,9 @@
         width: calc(100% - 180px)
     }
 }
+main{
+    min-height : 100vh;
+}
 svg{
     vertical-align : sub;
 }

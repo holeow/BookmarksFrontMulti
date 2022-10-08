@@ -3,9 +3,9 @@
 @inject NavigationManager manager
 
 <div class="page">
-    
 
-    <main>
+	@*//! need preventDefault ontouchMove or touchEnd doesn't work*@
+	<main @ontouchstart=touchStart @ontouchend=touchEnd @ontouchmove=touchMove @ontouchmove:preventDefault >
 	    <div class="top-row px-4">
 		    <div class="top-row ps-3 navbar navbar-dark">
 			    <div class="container-fluid">
@@ -19,9 +19,8 @@
 	    
 	    <article class="content px-4">
 		    @Body
-			
 	    </article>
-	    <p>@message</p>
+	    
 	    </div>
     </main>
 </div>
@@ -30,6 +29,16 @@
 
 	private NavMenu? menu;
 	public string message;
+
+	public double lastX;
+	public double baseX;
+
+
+	public double diffX => lastX - baseX;
+
+
+	public DateTime time;
+	public bool called = false;
 
 	public bool collapseMenu { get; set; } = true;
 	public async Task menuButtonClick()
@@ -55,5 +64,60 @@
 	{
 		collapseMenu = true;
 		StateHasChanged();
+	}
+
+
+	public async Task touchStart(TouchEventArgs args)
+	{
+
+		baseX = args.Touches[0].ClientX;
+		lastX = args.Touches[0].ClientX;
+
+		time = DateTime.Now;
+		called = false;
+	}
+
+	public async Task touchEnd(TouchEventArgs args)
+	{
+
+
+
+	}
+
+	public async Task touchMove(TouchEventArgs args)
+	{
+
+		var diff = DateTime.Now - time;
+
+
+		lastX = args.Touches[0].ClientX;
+		if (!called && diff.TotalMilliseconds < 700)
+		{
+			if (diffX > 90 && diff.TotalMilliseconds <250)
+			{
+				called = true;
+				collapseMenu = false;
+				return;
+			}
+			if (diffX > 225 && diff.TotalMilliseconds < 700)
+			{
+				called = true;
+				collapseMenu = false;
+				return;
+			}
+
+			if (diffX <-90 && diff.TotalMilliseconds < 250)
+			{
+				called = true;
+				collapseMenu = true;
+				return;
+			}
+			if (diffX<-225 && diff.TotalMilliseconds < 700)
+			{
+				called = true;
+				collapseMenu = true;
+				return;
+			}
+		}
 	}
 }
