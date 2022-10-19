@@ -136,6 +136,10 @@ else
 			string temp = tempdata["afterConnectReturn"] as string;
 			if (temp != null)
 				manager.NavigateTo(temp);
+			else
+			{
+				manager.NavigateTo("/user/root/content");
+			}
 		}
 	}
 
